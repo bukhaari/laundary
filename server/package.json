@@ -1,0 +1,36 @@
+{
+  "name": "laundry_api",
+  "version": "1.0.0",
+  "description": "this is a laundry system",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "server": "clear && nodemon server.js",
+    "client": "npm start --prefix ../client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "keywords": [],
+  "author": "Abdullahi Abas Abdulkadir",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "concurrently": "^6.1.0",
+    "cors": "^2.8.5",
+    "date-and-time": "^1.0.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "helmet": "^4.6.0",
+    "heroku-ssl-redirect": "^0.1.1",
+    "joi": "^17.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.6",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "dotenv": "^9.0.0",
+    "nodemon": "^2.0.7"
+  }
+}
