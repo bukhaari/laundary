@@ -53,7 +53,7 @@ export default function AddUser({
   const [loading, setLoading] = React.useState(false);
   const { bindProps, data } = useRules({
     data: {
-      _id: editeUser._id || "",
+      _id: editeUser._id ||"",
       FullName: editeUser.FullName || "",
       UserType: editeUser.UserType || "",
       Password: "",
@@ -77,7 +77,9 @@ export default function AddUser({
   };
 
   let dispatch = useDispatch();
+
   const [UserRole, setUserRoles] = React.useState([]);
+  
   React.useEffect(() => {
     dispatch(GROUP_REQUEST())
       .then((val) => {

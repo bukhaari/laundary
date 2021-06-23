@@ -15,13 +15,12 @@ import {
   TableCell,
   Table,
   Typography,
+  colors,
 } from "@material-ui/core";
 import { useRules } from "../../Hooks/useRueles";
-import { useDispatch } from "react-redux";
 import { useState } from "react";
 import BaseInput from "../../components/controls/BaseInput";
 import BaseButton from "../../components/controls/BaseButton";
-import { addNewBranch } from "../../store/modules/Branch";
 // import BaseSelect from "../../components/controls/BaseSelect";
 // import SearchIcon from "@material-ui/icons/Search";
 import {
@@ -32,88 +31,70 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(7),
     marginLeft: theme.spacing(4),
     marginRight: theme.spacing(4),
     display: "flex",
     flexDirection: "column",
   },
 
-  Input: {
-    padding: "opx 8px",
+  button: {
+    padding: "opx 2px",
     background: "#0b8457",
+    float:"right"
   },
 
   TableCell: {
     borderBottom: "0px solid",
+  },
+  CardHeader: {
+    borderBottom: "2px solid #dee1ec",
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: colors.grey[100],
+    padding:theme.spacing(1.5)
   },
 }));
 
 function Order() {
   const classes = useStyles();
 
-  const [CartService, setCart] = useState([
+  const [CartService] = useState([
     { id: 1, service: "washing", item: "SHIRTS", qty: 1, price: 70 },
     { id: 2, service: "Ironing", item: "TROUSER", qty: 4, price: 60 },
     { id: 3, service: "washing", item: "T-SHIRT", qty: 3, price: 40 },
   ]);
   const NewPaid = { phone: "", name: "", paid: "", balnce: "" };
 
-  let [errMsg, setErrorMsg] = useState("");
-  const isRequired = (v) => {
-    return !!v || "is Required";
-  };
 
-  const { bindProps, data } = useRules({
+  const { bindProps } = useRules({
     data: NewPaid,
   });
 
-  const dispatch = useDispatch();
-
-  let [loading, setLoading] = useState(false);
-
-  const formSubmit = (e) => {
-    e.preventDefault();
-    if (data.isValid()) {
-      setErrorMsg("");
-      setLoading(true);
-
-      dispatch(addNewBranch(data.values))
-        .then((v) => {
-          console.log(v);
-          data.clear();
-        })
-        .catch((err) => {
-          setErrorMsg(err.message);
-        })
-        .finally(() => setLoading(false));
-    }
-  };
   // console.log("rerendered");
   // location.push("/");
   // console.log(location);
   return (
-    // <Container maxWidth="lg">
     <div className={classes.pageContent}>
       <CssBaseline />
-      <Grid container>
+      <Grid container spacing={3}>
         {/* service Form */}
         <Grid item md={6}>
           <BaseCard>
-            <CardHeader>
+            <div className={classes.CardHeader}>
               <Grid container spacing={2}>
-                <Grid item xs={8} sm={8}>
+                <Grid item xs={9} sm={9}>
                   <Typography>Service</Typography>
                 </Grid>
-                <Grid item xs={4} sm={4}>
+                <Grid item xs={3} sm={3}>
                   <BaseButton
                     size="small"
                     label="Add New"
-                    className={classes.Input}
+                    className={classes.button}
                   />
                 </Grid>
               </Grid>
-            </CardHeader>
+            </div>
             <CardBody>
               <Grid container spacing={5}>
                 <Grid item xs={12} sm={12}>
@@ -155,20 +136,19 @@ function Order() {
         {/* Payment Form */}
         <Grid item md={6}>
           <BaseCard>
-            <CardHeader>
+          <div className={classes.CardHeader}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
                   <Typography>Amount</Typography>
                 </Grid>
               </Grid>
-            </CardHeader>
+            </div>
             <CardBody>
               <Grid container spacing={2}>
                 <Grid item xs={6} sm={6}>
                   <BaseInput
                     {...bindProps("phone")}
                     // rules={[isRequired]}
-                    deps={[errMsg]}
                     variant="outlined"
                     required
                     fullWidth
@@ -179,7 +159,6 @@ function Order() {
                   <BaseInput
                     {...bindProps("name")}
                     // rules={[isRequired]}
-                    deps={[errMsg]}
                     variant="outlined"
                     required
                     fullWidth
@@ -190,7 +169,6 @@ function Order() {
                   <BaseInput
                     {...bindProps("paid")}
                     // rules={[isRequired]}
-                    deps={[errMsg]}
                     variant="outlined"
                     required
                     type="number"
@@ -202,7 +180,6 @@ function Order() {
                   <BaseInput
                     {...bindProps("balnce")}
                     // rules={[isRequired]}
-                    deps={[errMsg]}
                     variant="outlined"
                     required
                     type="number"
@@ -227,65 +204,64 @@ function Order() {
                   </FormControl>
                 </Grid>
                 <Grid item xs={6} sm={6}>
-                  <BaseButton loading={loading} label="Add New" />
+                  <BaseButton label="Add New" />
                 </Grid>
               </Grid>
             </CardBody>
           </BaseCard>
         </Grid>
-      </Grid>
 
-      {/* Table of Data */}
-      <Grid item md={12}>
-        <BaseCard>
-          <Grid container spacing={3}>
-            <Grid item md={12}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Item</TableCell>
-                    <TableCell>Service</TableCell>
-                    <TableCell>QTY</TableCell>
-                    <TableCell>Price</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {CartService.map((c) => (
-                    <TableRow key={c.id}>
-                      <TableCell className={classes.TableCell}>
-                        {c.item}
-                      </TableCell>
-                      <TableCell className={classes.TableCell}>
-                        {c.service}
-                      </TableCell>
-                      <TableCell className={classes.TableCell}>
-                        {c.qty}
-                      </TableCell>
-                      <TableCell className={classes.TableCell}>
-                        {c.price}
-                      </TableCell>
+        {/* Table of Data */}
+        <Grid item md={12}>
+          <BaseCard>
+            <Grid container spacing={3}>
+              <Grid item md={12}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Item</TableCell>
+                      <TableCell>Service</TableCell>
+                      <TableCell>QTY</TableCell>
+                      <TableCell>Price</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHead>
+                  <TableBody>
+                    {CartService.map((c) => (
+                      <TableRow key={c.id}>
+                        <TableCell className={classes.TableCell}>
+                          {c.item}
+                        </TableCell>
+                        <TableCell className={classes.TableCell}>
+                          {c.service}
+                        </TableCell>
+                        <TableCell className={classes.TableCell}>
+                          {c.qty}
+                        </TableCell>
+                        <TableCell className={classes.TableCell}>
+                          {c.price}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Grid>
+              <Grid
+                item
+                md={12}
+                style={{
+                  textAlign: "right",
+                  marginRight: "50px",
+                }}
+              >
+                <Typography style={{ fontWeight: "bold" }}>
+                  Total Amount: 150
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid
-              item
-              md={12}
-              style={{
-                textAlign: "right",
-                marginRight: "50px",
-              }}
-            >
-              <Typography style={{ fontWeight: "bold" }}>
-                Total Amount: 150
-              </Typography>
-            </Grid>
-          </Grid>
-        </BaseCard>
+          </BaseCard>
+        </Grid>
       </Grid>
     </div>
-    // </Container>
   );
 }
 

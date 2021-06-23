@@ -70,7 +70,7 @@ router.post('/', (req, res) => {
         Name: req.body.Name,
         phone: req.body.phone,
         date: req.body.date,
-        time: req.body.time,
+        // time: req.body.time,
         RegBranch: ObjectID(branchID)
       };
       insertOne(AccessDB, customerColl, CustomerInfo)

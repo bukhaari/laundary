@@ -3,4 +3,5 @@ export const EndPoints = {
   branch: "/branches",
   user: "/users",
   service: "/service",
+  employees: "/employees",
 };

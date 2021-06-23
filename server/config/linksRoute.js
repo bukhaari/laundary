@@ -71,7 +71,7 @@ const ClientLinks = [
       },
       {
         title: 'Employee',
-        to: '/employee',
+        to: '/employees',
         icon: 'assignment_ind',
         meta: {
           create: true,

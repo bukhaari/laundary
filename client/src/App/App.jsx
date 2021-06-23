@@ -23,8 +23,10 @@ import NewBranch from "../views/Home/Branch/newBranch";
 import UserRoles from "../views/Users/roles";
 import UserList from "../views/Users/UserList";
 import Client from "../views/Client";
+// import ClientForm from "../views/Client/clientForm";
 import Orders from "../views/Orders";
-import Service from "../views/service/service";
+import Service from "../views/service";
+import Employees from "../views/Employees";
 
 const drawerWidth = 240;
 
@@ -44,6 +46,11 @@ let initialRoutes = [
     path: "/service",
     exact: true,
     page: Service,
+  },
+  {
+    path: "/employees",
+    exact: true,
+    page: Employees,
   },
 
   //end

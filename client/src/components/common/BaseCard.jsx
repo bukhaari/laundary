@@ -4,8 +4,6 @@ import { colors, Card, makeStyles } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   Card: {
     borderRadius: " 1em 1em 1em / 1em 1em",
-    padding: theme.spacing(1),
-    margin: theme.spacing(2),
   },
 
   CardBody: {
@@ -15,10 +13,10 @@ const useStyles = makeStyles((theme) => ({
   },
 
   CardHeader: {
-    padding: theme.spacing(1),
+    // borderBottom: "2px solid #cabbe9",
     display: "flex",
     flexDirection: "column",
-    backgroundColor: colors.grey[100],
+    // backgroundColor: colors.grey[100],
   },
 }));
 
@@ -34,5 +32,10 @@ export function CardBody(props) {
 
 export function CardHeader(props) {
   const classes = useStyles();
-  return <div className={classes.CardHeader}>{props.children}</div>;
+  return (
+    <div>
+      <div className={classes.CardHeader}>{props.children}</div>
+      <br></br>
+    </div>
+  );
 }

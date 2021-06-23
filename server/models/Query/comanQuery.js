@@ -427,6 +427,21 @@ function DeleteMany(dbName, collectionName, key) {
   });
 }
 
+const findOneAndUpdateData = async (
+  dbName,
+  collectionName,
+  data,
+  filterKey
+) => {
+  const datas = await DB_Collection(dbName, collectionName);
+
+  await datas.findOneAndUpdate(filterKey, [{ $set: data }], {
+    returnNewDocument: true
+  });
+
+  return await datas.findOne(filterKey);
+};
+
 module.exports = {
   BulkWrite,
   findJoined_WithKey,
@@ -443,5 +458,6 @@ module.exports = {
   insertMany,
   insertUsingTransaction,
   CreateCollections,
-  CreateIndex
+  CreateIndex,
+  findOneAndUpdateData
 };

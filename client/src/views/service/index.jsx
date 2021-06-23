@@ -3,7 +3,7 @@ import { BaseCard, CardHeader } from "../../components/common/BaseCard";
 import ServiceForm from "../../views/service/serviceForm";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllService, loadServices } from "../../store/modules/service";
-import DataTable from "material-datatable";
+import DataTable from "../../components/DataTable";
 import {
   makeStyles,
   Grid,
@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "600",
     fontSize: "17px",
   },
-  
 }));
 
 function Service() {
@@ -50,75 +49,47 @@ function Service() {
   const dispatch = useDispatch();
   const [OpenPopUp, setOpenPopUp] = useState(false);
 
+  const Title = "Services";
+
   useEffect(() => {
     dispatch(loadServices());
   }, []);
 
-
-  const options = {
-    // filterType: "checkbox",
-    // filterType: 'multiselect',
-    filter: false,
-    selectableRows: false,
-    usePaperPlaceholder: false,
-    responsive: 'stacked',
-    rowsPerPage: 10,
-    componentWillReceiveProps: true,
-    page: 0,
-    sortColumnIndex: 2,
-    sortColumnDirection: "desc",
-    sortFilterList:false,
-    print:false,
-    download:true,
-    viewColumns:true,
-    pagination:true,
-  };
-
   const TableData = {
-    columns :[
-      {
-        name: "Name",
-        field: "item",
-      },
-      {
-        name: "washing",
-        field: "washing",
-      },
-      {
-        name: "ironing",
-        field: "ironing",
-      },
-      {
-        name: "ExWashing",
-        field: "ExWashing",
-      },
-      {
-        name: "ExIroning",
-        field: "ExIroning",
-      },
-      {
-        name: "action",
-        field: "action",
-        options: {
-          filter: false,
-          sort: false,
-         }
-      },
+    columns: [
+      { id: "item", label: "Item" },
+      { id: "washing", label: "Washing" },
+      { id: "ironing", label: "Ironing" },
+      { id: "ExWashing", label: "Expr Washing" },
+      { id: "ExIroning", label: "Expr Ironing" },
+      { id: "action", label: "Action" },
     ],
-    data: services.map(s=> {
-      const service = {...s}
-      service.action =  <Button size="small" className={classes.buttonAction}> Edit
-      </Button>
-      return service
-    })
-  }
+    rows: services
+      ? services.map((s) => {
+          const servive = { ...s };
+          servive.action = (
+            <div>
+              <Button size="small" className={classes.buttonAction}>
+                Edit
+              </Button>
+            </div>
+          );
+          return servive;
+        })
+      : [],
+  };
   return (
     <Container maxWidth="lg">
       <div className={classes.pageContent}>
         <BaseCard>
           <CardHeader>
             <Grid container>
-              <Grid item xs={12} sm={12}>
+              <Grid item xs={9} sm={9}>
+                <Typography className={classes.titleText}>
+                  Services Information
+                </Typography>
+              </Grid>
+              <Grid item xs={3} sm={3}>
                 <Button
                   size="small"
                   className={classes.button}
@@ -129,13 +100,10 @@ function Service() {
               </Grid>
             </Grid>
           </CardHeader>
-          <DataTable
-            title={"Services List"}
-            data={TableData.data}
-            columns={TableData.columns}
-            options={options}
-          />
+          <DataTable data={TableData} title={Title} searchFieldName={"item"} />
         </BaseCard>
+        {/* columns={HeaderCells} rows={services} */}
+
         <ServiceForm
           title="Services Registration"
           OpenPopUp={OpenPopUp}

@@ -28,11 +28,14 @@ function UserList() {
       })
       .catch(console.log);
   };
+
   let dispatch = useDispatch();
+  
   React.useEffect(() => {
     LoadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  
   return (
     <Container maxWidth="lg">
       <Card>

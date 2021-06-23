@@ -49,22 +49,24 @@ export const useRules = (props) => {
       payload: { [field]: value },
     });
   };
-  const onError = (field) => (rules = state.rules[field] || []) => {
-    // console.log(state.rules["branchCash"]);
-    for (let index = 0; index < rules.length; index++) {
-      if (typeof rules[index] === "function") {
-        let errMsg = rules[index](state.values[field], field);
-        if (typeof errMsg === "function") errMsg = errMsg();
-        if (errMsg === true) {
-          dispatch({ type: "SET-ERROR", payload: { [field]: false } });
-        } else {
-          dispatch({ type: "SET-ERROR", payload: { [field]: errMsg } });
+  const onError =
+    (field) =>
+    (rules = state.rules[field] || []) => {
+      // console.log(state.rules["branchCash"]);
+      for (let index = 0; index < rules.length; index++) {
+        if (typeof rules[index] === "function") {
+          let errMsg = rules[index](state.values[field], field);
+          if (typeof errMsg === "function") errMsg = errMsg();
+          if (errMsg === true) {
+            dispatch({ type: "SET-ERROR", payload: { [field]: false } });
+          } else {
+            dispatch({ type: "SET-ERROR", payload: { [field]: errMsg } });
 
-          break;
-        }
-      } else throw new Error("every rule must be function");
-    }
-  };
+            break;
+          }
+        } else throw new Error("every rule must be function");
+      }
+    };
   const setRule = (rules, field) => {
     if (!Array.isArray(rules)) throw new Error("Rules must be an array");
     dispatch({ type: "SET-RULES", payload: { [field]: rules } });
@@ -108,7 +110,13 @@ export const useRules = (props) => {
   });
   const bindProps = (val) => propsData(val);
 
-  const data = { isValid, clear, resetValidation: reset, values: state.values };
+  const data = {
+    isValid,
+    clear,
+    resetValidation: reset,
+    values: state.values,
+    setValue: dispatch,
+  };
 
   return { bindProps, data };
 };

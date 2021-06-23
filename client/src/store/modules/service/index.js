@@ -1,25 +1,27 @@
 import { apiBegan } from "../../Actions";
 import { EndPoints } from "../endpoints";
-import { createSlice, createSelector } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { createSelector } from "reselect";
 
 const slice = createSlice({
+  name: "services",
   initialState: {
     list: [],
   },
-  name: "services",
   reducers: {
-    servicesReceived: (bugs, action) => {
-      bugs.list = action.payload;
+    servicesReceived: (services, { payload }) => {
+      services.list = payload;
+      return services;
     },
-    servicesAdded: (bugs, action) => {
-      bugs.list.push(action.payload);
+    servicesAdded: (state, action) => {
+      state.list.push(action.payload);
       return state;
     },
     servicesUpdated: (state, action) => {
-      state.list = state.list.map((service) =>
-        action.payload._id === service._id
-          ? { ...service, ...action.payload }
-          : service
+      state.list = state.list.map((oldState) =>
+        action.payload._id === oldState._id
+          ? { ...oldState, ...action.payload }
+          : oldState
       );
       return state;
     },
@@ -29,19 +31,19 @@ const slice = createSlice({
 export default slice.reducer;
 
 export const getAllService = createSelector(
-  (state) => state.services.list,
-  (list) => list
+  (state) => state.services,
+  (services) => services.list
 );
 
-export const loadServices = () =>
-  apiBegan({
+export const loadServices = () => {
+  return apiBegan({
     config: {
-      url: EndPoints.branch,
-      data,
-      method: "post",
+      url: EndPoints.service,
+      method: "get",
     },
     customSuccess: slice.actions.servicesReceived.type,
   });
+};
 
 export const addNewService = (data) => {
   return apiBegan({

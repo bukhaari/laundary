@@ -1,15 +1,16 @@
 import React, { memo, useState, useEffect } from "react";
 import { BaseCard, CardHeader } from "../../components/common/BaseCard";
-import ServiceForm from "../../views/service/serviceForm";
+import AddButton from "../../views/Employees/employeeForm";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllService, loadServices } from "../../store/modules/service";
+import { getAllEmployees, loadEmployees } from "../../store/modules/Employees";
 import DataTable from "material-datatable";
+import AddIcon from "@material-ui/icons/Add";
 import {
   makeStyles,
   Grid,
-  Button,
-  Typography,
   Container,
+  IconButton,
+  Icon,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,10 +27,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1rem",
   },
   button: {
-    background: "#0b8457",
-    margin: theme.spacing(3),
+    margin: theme.spacing(1.5),
+    marginRight: theme.spacing(4),
     float: "right",
-    color: "#fff",
   },
   buttonAction: {
     background: "#d72323",
@@ -41,19 +41,16 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "600",
     fontSize: "17px",
   },
-  
 }));
 
 function Service() {
   const classes = useStyles();
-  const services = useSelector(getAllService);
+  const employees = useSelector(getAllEmployees);
   const dispatch = useDispatch();
-  const [OpenPopUp, setOpenPopUp] = useState(false);
 
   useEffect(() => {
-    dispatch(loadServices());
+    dispatch(loadEmployees());
   }, []);
-
 
   const options = {
     // filterType: "checkbox",
@@ -61,40 +58,32 @@ function Service() {
     filter: false,
     selectableRows: false,
     usePaperPlaceholder: false,
-    responsive: 'stacked',
+    responsive: "stacked",
     rowsPerPage: 10,
     componentWillReceiveProps: true,
     page: 0,
     sortColumnIndex: 2,
     sortColumnDirection: "desc",
-    sortFilterList:false,
-    print:false,
-    download:true,
-    viewColumns:true,
-    pagination:true,
+    sortFilterList: false,
+    print: false,
+    download: true,
+    viewColumns: true,
+    pagination: true,
   };
 
   const TableData = {
-    columns :[
+    columns: [
       {
         name: "Name",
-        field: "item",
+        field: "name",
       },
       {
-        name: "washing",
-        field: "washing",
+        name: "Phone",
+        field: "phone",
       },
       {
-        name: "ironing",
-        field: "ironing",
-      },
-      {
-        name: "ExWashing",
-        field: "ExWashing",
-      },
-      {
-        name: "ExIroning",
-        field: "ExIroning",
+        name: "Address",
+        field: "address",
       },
       {
         name: "action",
@@ -102,16 +91,15 @@ function Service() {
         options: {
           filter: false,
           sort: false,
-         }
+        },
       },
     ],
-    data: services.map(s=> {
-      const service = {...s}
-      service.action =  <Button size="small" className={classes.buttonAction}> Edit
-      </Button>
-      return service
-    })
-  }
+    data: employees.map((s) => {
+      const employee = { ...s };
+      employee.action = <AddButton titlePopUp="info" isNewOrUpdate={employee} />;
+      return employee;
+    }),
+  };
   return (
     <Container maxWidth="lg">
       <div className={classes.pageContent}>
@@ -119,28 +107,17 @@ function Service() {
           <CardHeader>
             <Grid container>
               <Grid item xs={12} sm={12}>
-                <Button
-                  size="small"
-                  className={classes.button}
-                  onClick={() => setOpenPopUp(true)}
-                >
-                  Add New
-                </Button>
+                <AddButton titlePopUp="info" isNewOrUpdate="new" />
               </Grid>
             </Grid>
           </CardHeader>
           <DataTable
-            title={"Services List"}
+            title={"Employees"}
             data={TableData.data}
             columns={TableData.columns}
             options={options}
           />
         </BaseCard>
-        <ServiceForm
-          title="Services Registration"
-          OpenPopUp={OpenPopUp}
-          setOpenPopUp={setOpenPopUp}
-        />
       </div>
     </Container>
   );
