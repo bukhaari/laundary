@@ -1,17 +1,13 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useEffect } from "react";
 import { BaseCard, CardHeader } from "../../components/common/BaseCard";
 import AddButton from "../../views/Employees/employeeForm";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllEmployees, loadEmployees } from "../../store/modules/Employees";
 import DataTable from "material-datatable";
-import AddIcon from "@material-ui/icons/Add";
-import {
-  makeStyles,
-  Grid,
-  Container,
-  IconButton,
-  Icon,
-} from "@material-ui/core";
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import PageHeader from "./../../components/common/pageHeader";
+
+import { makeStyles, Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -41,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "600",
     fontSize: "17px",
   },
+  pageHeader: {
+    // paddingBottom: theme.spacing(10),
+  },
 }));
 
 function Service() {
@@ -64,8 +63,8 @@ function Service() {
     page: 0,
     sortColumnIndex: 2,
     sortColumnDirection: "desc",
-    sortFilterList: false,
-    print: false,
+    sortFilterList: true,
+    print: true,
     download: true,
     viewColumns: true,
     pagination: true,
@@ -96,18 +95,31 @@ function Service() {
     ],
     data: employees.map((s) => {
       const employee = { ...s };
-      employee.action = <AddButton titlePopUp="info" isNewOrUpdate={employee} />;
+      employee.action = (
+        <AddButton
+          titlePopUp="Employee Registration"
+          isNewOrUpdate={employee}
+        />
+      );
       return employee;
     }),
   };
   return (
-    <Container maxWidth="lg">
+    <div>
+      <PageHeader
+        title="Employees"
+        subTitle="Employees Information"
+        Icon={<GroupAddIcon />}
+      />
       <div className={classes.pageContent}>
         <BaseCard>
           <CardHeader>
             <Grid container>
               <Grid item xs={12} sm={12}>
-                <AddButton titlePopUp="info" isNewOrUpdate="new" />
+                <AddButton
+                  titlePopUp="Employee Registration"
+                  isNewOrUpdate="new"
+                />
               </Grid>
             </Grid>
           </CardHeader>
@@ -119,7 +131,7 @@ function Service() {
           />
         </BaseCard>
       </div>
-    </Container>
+    </div>
   );
 }
 

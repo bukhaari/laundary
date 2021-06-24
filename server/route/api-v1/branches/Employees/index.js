@@ -5,7 +5,6 @@ const { ObjectID } = require('mongodb');
 const {
   insertOne,
   findAll,
-  updateOne,
   findOneAndUpdateData
 } = require('../../../../models/Query/comanQuery');
 const router = express.Router();
@@ -28,7 +27,13 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { error } = EmployeetSchema(req.body);
+  console.log('data before post', req.body);
+  let newData = {
+    name: req.body.name,
+    phone: req.body.phone,
+    address: req.body.address
+  };
+  const { error } = EmployeetSchema(newData);
   if (error) {
     res.status(400).send(error.details[0].message);
     return;
@@ -36,16 +41,13 @@ router.post('/', async (req, res) => {
 
   const { AccessDB, branchID } = req.headers.user;
 
-  let newData = {
-    name: req.body.name,
-    phone: req.body.phone,
-    address: req.body.address,
-    branch: branchID
-  };
-
   try {
-    const result = await insertOne(AccessDB, AccessColl, newData);
+    const result = await insertOne(AccessDB, AccessColl, {
+      ...newData,
+      branch: branchID
+    });
     const data = result.ops[0];
+    console.log('data after post', data);
     res.send(data);
   } catch (ex) {
     res.send(ex.message);
@@ -54,14 +56,17 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/', async (req, res) => {
-  const { AccessDB, branchID } = req.headers.user;
+  console.log('data before put:', req.body);
+  let UpdateInfo = {
+    name: req.body.name,
+    phone: req.body.phone,
+    address: req.body.address
+  };
+
+  const { error } = EmployeetSchema(UpdateInfo);
+  if (error) return res.status(400).send(error.details[0].message);
   try {
-    let UpdateInfo = {
-      name: req.body.name,
-      phone: req.body.phone,
-      address: req.body.address,
-      branch: branchID
-    };
+    const { AccessDB, branchID } = req.headers.user;
     const filterKey = {
       branch: branchID,
       _id: ObjectID(req.body._id)
@@ -70,28 +75,26 @@ router.put('/', async (req, res) => {
     const result = await findOneAndUpdateData(
       AccessDB,
       AccessColl,
-      UpdateInfo,
+      { ...UpdateInfo, branch: branchID },
       filterKey
     );
+    console.log('data after put:', result);
     res.send(result);
   } catch (error) {
-    res.send('Data was not found!!');
+    res.send('Data was not Updated!');
     console.log(error);
     throw error;
   }
 });
 
-function EmployeetSchema(Client) {
+function EmployeetSchema(employee) {
   try {
     const schema = Joi.object({
       name: Joi.string().required(),
       phone: Joi.number().required(),
-      address: Joi.string(),
-      _id: Joi.number()
-      // date: Joi.date().required(),
+      address: Joi.string()
     });
-
-    return schema.validate(Client);
+    return schema.validate(employee);
   } catch (error) {
     console.log(error);
     return error;

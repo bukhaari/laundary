@@ -137,7 +137,10 @@ function EmployeeForm({ titlePopUp, isNewOrUpdate = {} }) {
                   />
                 </Grid>
                 <Grid item {...breakPoin}>
-                  <BaseButton loading={loading} label="Create" />
+                  <BaseButton
+                    loading={loading}
+                    label={isNewOrUpdate._id ? "Update" : "Create"}
+                  />
                 </Grid>
               </Grid>
             </form>

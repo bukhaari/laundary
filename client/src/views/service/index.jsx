@@ -4,13 +4,10 @@ import ServiceForm from "../../views/service/serviceForm";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllService, loadServices } from "../../store/modules/service";
 import DataTable from "../../components/DataTable";
-import {
-  makeStyles,
-  Grid,
-  Button,
-  Typography,
-  Container,
-} from "@material-ui/core";
+import PageHeader from "./../../components/common/pageHeader";
+import LocalMallIcon from "@material-ui/icons/LocalMall";
+
+import { makeStyles, Grid, Button, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -79,7 +76,12 @@ function Service() {
       : [],
   };
   return (
-    <Container maxWidth="lg">
+    <div>
+      <PageHeader
+        title="Service"
+        subTitle="Service Information"
+        Icon={<LocalMallIcon />}
+      />
       <div className={classes.pageContent}>
         <BaseCard>
           <CardHeader>
@@ -110,7 +112,7 @@ function Service() {
           setOpenPopUp={setOpenPopUp}
         />
       </div>
-    </Container>
+    </div>
   );
 }
 

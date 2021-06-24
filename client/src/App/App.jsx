@@ -24,7 +24,7 @@ import UserRoles from "../views/Users/roles";
 import UserList from "../views/Users/UserList";
 import Client from "../views/Client";
 // import ClientForm from "../views/Client/clientForm";
-import Orders from "../views/Orders";
+import Orders from "../views/OrderService";
 import Service from "../views/service";
 import Employees from "../views/Employees";
 

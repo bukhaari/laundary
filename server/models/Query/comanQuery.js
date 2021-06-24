@@ -442,6 +442,11 @@ const findOneAndUpdateData = async (
   return await datas.findOne(filterKey);
 };
 
+// const updateOneData = async (dbName, collectionName, data, filterKey) => {
+//   const datas = await DB_Collection(dbName, collectionName);
+//   return datas.updateOne(filterKey, { $set: data });
+// };
+
 module.exports = {
   BulkWrite,
   findJoined_WithKey,
@@ -460,4 +465,5 @@ module.exports = {
   CreateCollections,
   CreateIndex,
   findOneAndUpdateData
+  // updateOneData
 };
