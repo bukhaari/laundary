@@ -5,8 +5,8 @@ export const useAppStyles = (drawerWidth) =>
     return {
       root: {
         display: "flex",
-        height: "100vh",
-        width: "100vw",
+        height: "100%",
+        width: "100%",
         backgroundColor: colors.grey[200],
       },
 
@@ -24,7 +24,7 @@ export const useAppStyles = (drawerWidth) =>
       },
       drawerHeader: {
         display: "flex",
-        alignItems: "center",
+        // alignItems: "center",
         color: ({ textColor }) => textColor || "black",
         padding: theme.spacing(0, 1),
         backgroundColor: ({ appParColor, drawerWidth }) => {

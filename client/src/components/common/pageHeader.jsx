@@ -4,7 +4,6 @@ import { Paper, Card, Typography, makeStyles, Button } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: "#fdfdff",
-    // position: "fixed",
     top: "0",
     width: "100%",
     // marginTop: theme.spacing(7),

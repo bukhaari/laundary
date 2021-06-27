@@ -12,37 +12,11 @@ import { makeStyles, Grid } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     marginTop: theme.spacing(5),
-    margin: theme.spacing(5),
-    display: "flex",
-    flexDirection: "column",
-  },
-
-  searchInput: {
-    opacity: "0.6",
-    padding: "opx 8px",
-    fontSize: "1rem",
-  },
-  button: {
-    margin: theme.spacing(1.5),
-    marginRight: theme.spacing(4),
-    float: "right",
-  },
-  buttonAction: {
-    background: "#d72323",
-    color: "#fff",
-    fontSize: "10px",
-  },
-  titleText: {
-    margin: theme.spacing(3),
-    fontWeight: "600",
-    fontSize: "17px",
-  },
-  pageHeader: {
-    // paddingBottom: theme.spacing(10),
+    margin: theme.spacing(4),
   },
 }));
 
-function Service() {
+function Empolyee() {
   const classes = useStyles();
   const employees = useSelector(getAllEmployees);
   const dispatch = useDispatch();
@@ -56,8 +30,8 @@ function Service() {
     // filterType: 'multiselect',
     filter: false,
     selectableRows: false,
-    usePaperPlaceholder: false,
-    responsive: "stacked",
+    usePaperPlaceholder: true,
+    responsive: "scroll",
     rowsPerPage: 10,
     componentWillReceiveProps: true,
     page: 0,
@@ -112,27 +86,27 @@ function Service() {
         Icon={<GroupAddIcon />}
       />
       <div className={classes.pageContent}>
-        <BaseCard>
-          <CardHeader>
-            <Grid container>
-              <Grid item xs={12} sm={12}>
+        <Grid container>
+          <Grid item xs={12} sm={12}>
+            <BaseCard>
+              <CardHeader>
                 <AddButton
                   titlePopUp="Employee Registration"
                   isNewOrUpdate="new"
                 />
-              </Grid>
-            </Grid>
-          </CardHeader>
-          <DataTable
-            title={"Employees"}
-            data={TableData.data}
-            columns={TableData.columns}
-            options={options}
-          />
-        </BaseCard>
+              </CardHeader>
+              <DataTable
+                title={"Employees"}
+                data={TableData.data}
+                columns={TableData.columns}
+                options={options}
+              />
+            </BaseCard>
+          </Grid>
+        </Grid>
       </div>
     </div>
   );
 }
 
-export default memo(Service);
+export default memo(Empolyee);

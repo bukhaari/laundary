@@ -9,8 +9,8 @@ import LocalMallIcon from "@material-ui/icons/LocalMall";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     marginTop: theme.spacing(5),
-    marginLeft: theme.spacing(7),
-    marginRight: theme.spacing(7),
+    marginLeft: theme.spacing(5),
+    marginRight: theme.spacing(5),
   },
 }));
 

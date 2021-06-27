@@ -15,23 +15,12 @@ import {
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  pageContent: {
-    marginTop: theme.spacing(7),
-    marginLeft: theme.spacing(4),
-    marginRight: theme.spacing(4),
-    display: "flex",
-    flexDirection: "column",
-  },
-
   button: {
     padding: "opx 2px",
     background: "#0b8457",
     float: "right",
   },
 
-  TableCell: {
-    borderBottom: "0px solid",
-  },
   CardHeader: {
     borderBottom: "2px solid #dee1ec",
     display: "flex",
