@@ -5,9 +5,7 @@ export const useAppStyles = (drawerWidth) =>
     return {
       root: {
         display: "flex",
-        height: "100%",
         width: "100%",
-        backgroundColor: colors.grey[200],
       },
 
       // necessary for content to be below app bar

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect } from "react";
 import { BaseCard, CardHeader } from "../../components/common/BaseCard";
 import AddButton from "../../views/service/ServiceForm";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(5),
     marginLeft: theme.spacing(2.5),
     marginRight: theme.spacing(2.5),
+    marginBottom: theme.spacing(2.5),
   },
 }));
 

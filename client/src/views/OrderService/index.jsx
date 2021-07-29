@@ -1,46 +1,86 @@
-import { memo } from "react";
-import ServiceForm from "./serviceForm";
-import PaymentForm from "./paymentForm";
-import TableOrder from "./tableOrder";
-import PageHeader from "./../../components/common/pageHeader";
-import { Grid, CssBaseline, makeStyles } from "@material-ui/core";
+import { FormikStepper } from "../../components/common/Stepper";
+import { CardContent, Card, makeStyles } from "@material-ui/core";
+import PageHeader from "../../components/common/pageHeader";
+import { addNewOrder } from "../../store/modules/newOrder";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
+import { useDispatch } from "react-redux";
+import PersonalData from "./personalInfo";
+import { memo, useState } from "react";
+import Service from "./services";
+import Payment from "./payment";
+import * as Yup from "yup";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
-    marginTop: theme.spacing(5),
-    marginLeft: theme.spacing(5),
-    marginRight: theme.spacing(5),
+    margin: theme.spacing(3),
   },
 }));
 
 function Order() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const [info, setInfo] = useState({});
+  const getInfo = (values) => {
+    setInfo(values);
+  };
+
+  const [service, setService] = useState([]);
+  const handleservice = (value) => {
+    setService((prev) => {
+      return value;
+    });
+  };
+
+  console.log("service:", service);
+  // console.log("typeService:", typeService);
+
+  const onSubmit = async (values) => {
+    // const result = await dispatch(addNewOrder(values));
+    console.log(values);
+  };
+
+  const initialValues = {
+    number: "",
+    name: "",
+    paidAmount: "",
+    balance: "",
+    typePaid: [],
+  };
 
   return (
-    <main>
+    <div>
       <PageHeader
-        title="Order Service"
-        subTitle="Ordering Information"
+        title="Service"
+        subTitle="Services Order"
         Icon={<LocalMallIcon />}
       />
       <div className={classes.pageContent}>
-        <CssBaseline />
-        <Grid container spacing={3}>
-          <Grid item md={6}>
-            <ServiceForm />
-          </Grid>
-
-          <Grid item md={6}>
-            <PaymentForm />
-          </Grid>
-
-          <Grid item md={12}>
-            <TableOrder />
-          </Grid>
-        </Grid>
+        <Card>
+          <CardContent>
+            <FormikStepper
+              initialValues={initialValues}
+              onSubmit={onSubmit}
+              getInfo={getInfo}
+            >
+              <PersonalData
+                label="Personal Info"
+                validationSchema={Yup.object({
+                  name: Yup.string().required("Required!"),
+                  number: Yup.string().required("Required!"),
+                })}
+              />
+              <Service
+                label="Service"
+                handleservice={handleservice}
+                service={service}
+              />
+              <Payment label="Payment" personal={info} />
+            </FormikStepper>
+          </CardContent>
+        </Card>
       </div>
-    </main>
+    </div>
   );
 }
 

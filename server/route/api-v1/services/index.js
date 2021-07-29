@@ -35,11 +35,10 @@ router.post('/', async (req, res) => {
     ironing: req.body.ironing,
     ExIroning: req.body.ExIroning
   };
+
   const { error } = ServicetSchema(newData);
-  if (error) {
-    res.status(400).send(error.details[0].message);
-    return;
-  }
+
+  if (error) return res.status(400).send(error.details[0].message);
 
   const { AccessDB, branchID } = req.headers.user;
 
@@ -53,7 +52,7 @@ router.post('/', async (req, res) => {
     res.send(data);
   } catch (ex) {
     res.send(ex.message);
-    console(ex);
+    console.log(ex);
   }
 });
 

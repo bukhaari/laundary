@@ -38,8 +38,8 @@ function Popup(porps) {
       maxWidth="md"
       classes={{ paper: classes.dialogWrapper }}
     >
-     <DialogTitle>
-        <Grid container >
+      <DialogTitle>
+        <Grid container>
           <Grid item xs={10} sm={10}>
             <Typography className={classes.textTitele}>{title}</Typography>
           </Grid>
