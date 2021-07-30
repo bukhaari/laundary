@@ -1,6 +1,6 @@
 import { FormikStep } from "../../components/common/Stepper";
 import FormikControl from "../../components/controls/FormControl";
-import { Grid, Card, CardContent, CardHeader } from "@material-ui/core";
+import { Grid, Card, CardContent } from "@material-ui/core";
 
 function PersonalData() {
   return (

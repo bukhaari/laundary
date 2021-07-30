@@ -5,7 +5,7 @@ import { addNewOrder } from "../../store/modules/newOrder";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
 import { useDispatch } from "react-redux";
 import PersonalData from "./personalInfo";
-import { memo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import Service from "./services";
 import Payment from "./payment";
 import * as Yup from "yup";
@@ -32,20 +32,52 @@ function Order() {
     });
   };
 
-  console.log("service:", service);
-  // console.log("typeService:", typeService);
+  const [checking, setChecking] = useState("");
+  const handleChecking = (values) => {
+    setChecking(values);
+  };
+
+  const [totalAmount, setTotalAmount] = useState(0);
+  const handleTotalAmount = (values) => {
+    setTotalAmount(values);
+  };
+
+  useMemo(() => {
+    if (service.length === 0) {
+      return handleChecking("Fadlan Order samee");
+    }
+
+    if (service.length > 0) {
+      const total = service.reduce((accumulatar, currentValue) => {
+        return accumulatar + currentValue.amount;
+      }, 0);
+      console.log("total", total);
+      handleTotalAmount(total);
+      return handleChecking("");
+    }
+  }, [service]);
 
   const onSubmit = async (values) => {
+    const data = {
+      service: service,
+      ...values,
+      totalAmount: totalAmount,
+    };
+
+    if (service.length === 0) {
+      return handleChecking("Fadlan Order samee");
+    }
+
     // const result = await dispatch(addNewOrder(values));
-    console.log(values);
+    console.log("data submit", data);
+    handleChecking("");
   };
 
   const initialValues = {
     number: "",
     name: "",
-    paidAmount: "",
-    balance: "",
-    typePaid: [],
+    paidAmount: 0,
+    typePaid: "",
   };
 
   return (
@@ -75,7 +107,16 @@ function Order() {
                 handleservice={handleservice}
                 service={service}
               />
-              <Payment label="Payment" personal={info} />
+              <Payment
+                personal={info}
+                totalAmount={totalAmount}
+                label="Payment"
+                checking={checking}
+                validationSchema={Yup.object({
+                  typePaid: Yup.string().required("Required!"),
+                  paidAmount: Yup.number().required("Required!"),
+                })}
+              />
             </FormikStepper>
           </CardContent>
         </Card>

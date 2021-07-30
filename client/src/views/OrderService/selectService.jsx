@@ -198,8 +198,6 @@ export default function NewOrder({ handleservice }) {
     handleservice(orderValues);
   };
 
-  console.log(ServicesData);
-
   return (
     <div>
       <Button

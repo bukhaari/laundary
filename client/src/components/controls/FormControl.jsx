@@ -1,12 +1,13 @@
 import BaseField from "./BaseField";
 import BaseBtn from "./BaseBtn";
-import RadioBoxGroup from "./RadioBoxGroup";
-import BaseCheckBoxField from "./BaseCheckBoxField";
 import BaseTextArea from "./BaseTextArea";
 import BaseText from "./BaseText";
-import BaseRadioBoxField from "./BaseRadioBoxField";
 import BaseFieldArray from "./BaseFieldArray";
+import BaseCheckBoxField from "./BaseCheckBoxField";
 import BaseCheckBox from "./BaseCheckbox";
+import RadioBoxGroup from "./RadioBoxGroup";
+import BaseRadioBoxField from "./BaseRadioBoxField";
+import RadioBoxGroupField from "./RadioGroupField";
 
 function FormikControl({ control, ...rest }) {
   switch (control) {
@@ -22,6 +23,8 @@ function FormikControl({ control, ...rest }) {
       return <BaseTextArea {...rest} />;
     case "typography":
       return <BaseText {...rest} />;
+    case "radioFieldGroup":
+      return <RadioBoxGroupField {...rest} />;
     case "radioField":
       return <BaseRadioBoxField {...rest} />;
     case "radio":

@@ -1,18 +1,34 @@
 import { FormikStep } from "../../components/common/Stepper";
 import FormikControl from "../../components/controls/FormControl";
-import { Grid, Card, CardContent, CardHeader } from "@material-ui/core";
+import {
+  Grid,
+  Card,
+  CardContent,
+  makeStyles,
+  CardHeader,
+  TextField,
+} from "@material-ui/core";
 
-function Payment({ personal }) {
+function Payment({ personal, checking, totalAmount }) {
   const { name } = personal;
+  const description = checking + " " + name;
   const TypePaid = [
     { label: "Cash", value: "Cash" },
     { label: "M-PESA", value: "M-PESA" },
   ];
 
+  const useStyle = makeStyles({
+    desClor: {
+      color: checking === "" ? "black" : "red",
+    },
+  });
+
+  const classes = useStyle();
+
   return (
     <FormikStep>
       <Card>
-        <CardHeader title={name} />
+        <CardHeader title={description} className={classes.desClor} />
         <CardContent>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12}>
@@ -24,18 +40,21 @@ function Payment({ personal }) {
               />
             </Grid>
             <Grid item xs={12} sm={12}>
-              <FormikControl
-                control="field"
+              <TextField
                 type="number"
-                name="balance"
-                lable="Balance"
+                fullWidth
+                disabled
+                label="balance"
+                size="small"
+                variant="outlined"
+                value={totalAmount}
               />
             </Grid>
             <Grid item xs={12} sm={12}>
               <FormikControl
-                control="checkbox"
-                options={TypePaid}
+                control="radioFieldGroup"
                 name="typePaid"
+                items={TypePaid}
               />
             </Grid>
           </Grid>

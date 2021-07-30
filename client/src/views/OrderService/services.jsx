@@ -1,48 +1,51 @@
-import FormControl from "../../components/controls/FormControl";
-import React, { memo, useState } from "react";
+import { FormikStep } from "../../components/common/Stepper";
+import React from "react";
 import BaseTable from "../../components/controls/BaseTable";
 import SelectService from "./selectService";
-import {
-  Card,
-  CardContent,
-  makeStyles,
-  Button,
-  Checkbox,
-  TextField,
-} from "@material-ui/core";
+import { makeStyles, IconButton } from "@material-ui/core";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
-const useStyle = makeStyles((them) => ({
-  field: {
-    width: "90px",
+const useStyle = makeStyles((theme) => ({
+  button: {
+    color: "red",
   },
 }));
 
 function Service(props) {
+  const classes = useStyle();
   const { handleservice, service } = props;
 
   let Header = [
     { field: "itemName", headerName: "Item" },
     { field: "qty", headerName: "Qty" },
     { field: "amount", headerName: "amount" },
+    { field: "delete", headerName: "Delete" },
   ];
-  // const serviceItems = [
-  //   { value: "washing", label: "Washing" },
-  //   { value: "ironing", label: "Ironing" },
-  //   { value: "ExWashing", label: "Ex-Washing" },
-  //   { value: "ExIroning", label: "Ex-Ironing" },
-  // ];
 
-  // const [checked, setChecked] = useState(false);
-  // const taggleCheckbox = (e) => {
-  //   setChecked(e.target.checked);
-  //   // console.log(data);
-  // };
+  const handleDelete = (id) => {
+    const filterService = service.filter((s) => s._id !== id);
+    handleservice(filterService);
+  };
 
   return (
-    <div>
+    <FormikStep>
       <SelectService handleservice={handleservice} />
-      <BaseTable header={Header} items={service} />
-    </div>
+      <BaseTable
+        header={Header}
+        items={service.map((s) => ({
+          ...s,
+          delete: (
+            <IconButton
+              className={classes.button}
+              size={"small"}
+              onClick={() => handleDelete(s._id)}
+            >
+              <DeleteForeverIcon />
+            </IconButton>
+          ),
+        }))}
+      />
+    </FormikStep>
   );
 }
 
