@@ -1,17 +1,22 @@
 import React, { useEffect, useMemo, useState } from "react";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllService, loadServices } from "../../store/modules/service";
 import FormControl from "../../components/controls/FormControl";
 import BaseTable from "../../components/controls/BaseTable";
+import Brightness1Icon from "@material-ui/icons/Brightness1";
 import {
-  Container,
   TextField,
   Checkbox,
   makeStyles,
   Button,
+  List,
+  Box,
+  Grid,
+  ListItemText,
+  ListItem,
 } from "@material-ui/core";
 import CustomDialog from "../../components/CustomDialog";
+import { SketchPicker } from "react-color";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,7 +40,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NewOrder({ handleservice }) {
+export default function NewOrder(props) {
+  const {
+    handleservice,
+    seCheck,
+    checkBoxes,
+    setQtyAmountState,
+    QtyAmountState,
+    setColorState,
+    ColorState,
+  } = props;
+
   const classes = useStyles();
 
   const ServicesData = useSelector(getAllService);
@@ -58,6 +73,14 @@ export default function NewOrder({ handleservice }) {
     setOpen(false);
   };
 
+  const [currenColorId, setCurrenColorId] = useState(0);
+  const [openColor, setOpenColor] = React.useState(false);
+  const handleModalColor = (id) => {
+    setOpenColor(!openColor);
+    setCurrenColorId((prev) => id);
+    console.log("color id", id);
+  };
+
   useEffect(async () => {
     await dispatch(loadServices());
   }, []);
@@ -69,7 +92,7 @@ export default function NewOrder({ handleservice }) {
     { value: "ExIroning", label: "Ex-Ironing" },
   ];
 
-  const getCheckState = async () =>
+  const CreateCheckState = async () =>
     await ServicesData.map((s) => {
       return {
         Cid: s._id,
@@ -77,7 +100,7 @@ export default function NewOrder({ handleservice }) {
       };
     });
 
-  const getQtyAmountState = async () =>
+  const CreatetQtyAmountState = async () =>
     await ServicesData.map((s) => {
       return {
         Cid: s._id,
@@ -86,14 +109,23 @@ export default function NewOrder({ handleservice }) {
       };
     });
 
-  const [checkBoxes, seCheck] = useState([]);
-  const [QtyAmountState, setQtyAmountState] = useState([]);
+  const CreatetColortState = async () =>
+    await ServicesData.map((s) => {
+      return {
+        _id: s._id,
+        color: "#000",
+        colors: [],
+      };
+    });
+
   useEffect(() => {
     const handleValues = async () => {
-      const checkboxState = await getCheckState();
-      const qtyAmountNewSatet = await getQtyAmountState();
+      const checkboxState = await CreateCheckState();
+      const qtyAmountNewSatet = await CreatetQtyAmountState();
+      const newColorSatet = await CreatetColortState();
       setQtyAmountState(qtyAmountNewSatet);
       seCheck(checkboxState);
+      setColorState(newColorSatet);
     };
 
     handleValues();
@@ -161,17 +193,39 @@ export default function NewOrder({ handleservice }) {
     setQtyAmountState([...services, upd]);
   };
 
-  const getcheck = (id) => {
+  const handleComplateColor = (color, row) => {
+    console.log("row", row);
+    // console.log("Id color", id);
+    let AllColorState = ColorState.filter((item) => item._id !== row._id);
+    let current = ColorState.find((item) => item._id === row._id);
+    // console.log("AllColorState", AllColorState);
+    console.log("current", current);
+
+    const upd = {
+      ...current,
+      color: color.hex,
+      colors: [...current.colors, color.hex],
+    };
+    setColorState((prevColor) => [...AllColorState, upd]);
+    console.log("ColorState", ColorState);
+  };
+
+  const getcheckState = (id) => {
     let c = checkBoxes.find((k) => k.Cid == id);
     return c;
   };
 
-  const getQtyAmount = (id) => {
+  const getColorState = (id) => {
+    let c = ColorState.find((c) => c._id == id);
+    return c;
+  };
+
+  const getQtyAmountState = (id) => {
     let c = QtyAmountState.find((k) => k.Cid == id);
     return c;
   };
 
-  const orderValues = useMemo(() => {
+  useMemo(() => {
     const qtyAmountData = QtyAmountState.filter((a) => a.amount > 0);
 
     let orderderArray = [];
@@ -183,6 +237,7 @@ export default function NewOrder({ handleservice }) {
               itemName: i.item,
               qty: j.qty,
               _id: i._id,
+              total: j.qty * j.amount,
               type: typeService,
               amount: j.amount,
             });
@@ -191,12 +246,10 @@ export default function NewOrder({ handleservice }) {
       }
     }
 
-    return orderderArray;
+    console.log(orderderArray);
+    handleservice(orderderArray);
+    // return orderderArray;
   }, [QtyAmountState, checkBoxes]);
-
-  const handleOrder = () => {
-    handleservice(orderValues);
-  };
 
   return (
     <div>
@@ -219,86 +272,115 @@ export default function NewOrder({ handleservice }) {
           maxWidth: "md",
         }}
       >
-        <Container>
-          <CssBaseline />
-          <div>
-            <FormControl
-              control="radio"
-              onChange={(e) => onChangeTypeService(e, QtyAmountState)}
-              items={serviceItems}
-            />
-            <BaseTable
-              header={Header}
-              items={
-                ServicesData.length === 0
-                  ? []
-                  : ServicesData.map((row) => {
-                      const data = { ...row };
+        <div>
+          <FormControl
+            control="radio"
+            onChange={(e) => onChangeTypeService(e, QtyAmountState)}
+            items={serviceItems}
+          />
+          <BaseTable
+            header={Header}
+            items={
+              ServicesData.length === 0
+                ? []
+                : ServicesData.map((row) => {
+                    const data = { ...row };
 
-                      let checkData = getcheck(row._id);
+                    let checkData = getcheckState(row._id);
 
-                      data.check = (
-                        <Checkbox
-                          checked={checkData ? checkData.ischeck : false}
-                          onChange={(e) => handleChangeCheck(e, row._id, data)}
-                        />
-                      );
+                    data.check = (
+                      <Checkbox
+                        checked={checkData ? checkData.ischeck : false}
+                        onChange={(e) => handleChangeCheck(e, row._id, data)}
+                      />
+                    );
 
-                      let qtyAmount = getQtyAmount(row._id);
-                      data.qty = (
-                        <TextField
-                          type="number"
-                          className={classes.field}
+                    let qtyAmount = getQtyAmountState(row._id);
+                    data.qty = (
+                      <TextField
+                        type="number"
+                        className={classes.field}
+                        size="small"
+                        name="qty"
+                        variant="outlined"
+                        value={qtyAmount ? qtyAmount.qty : 1}
+                        onChange={(e) => handleQtyAmountState(e, row._id, data)}
+                      />
+                    );
+
+                    data.price = (
+                      <TextField
+                        type="number"
+                        className={classes.field}
+                        size="small"
+                        name="amount"
+                        value={qtyAmount ? qtyAmount.amount : 0}
+                        onChange={(e) => handleQtyAmountState(e, row._id, data)}
+                        variant="outlined"
+                      />
+                    );
+
+                    let getColor = getColorState(row._id);
+                    data.color = (
+                      <div>
+                        <Button
+                          variant="contained"
                           size="small"
-                          name="qty"
-                          variant="outlined"
-                          value={qtyAmount ? qtyAmount.qty : 1}
-                          onChange={(e) =>
-                            handleQtyAmountState(e, row._id, data)
-                          }
-                        />
-                      );
-
-                      data.price = (
-                        <TextField
-                          type="number"
-                          className={classes.field}
-                          size="small"
-                          name="amount"
-                          value={qtyAmount ? qtyAmount.amount : 0}
-                          onChange={(e) =>
-                            handleQtyAmountState(e, row._id, data)
-                          }
-                          variant="outlined"
-                        />
-                      );
-
-                      data.color = (
-                        <Button className={classes.field} size="small">
+                          onClick={() => handleModalColor(row._id)}
+                          color="primary"
+                        >
                           Color
                         </Button>
-                      );
+                        <CustomDialog
+                          title={<div>Choose Color</div>}
+                          onClose={handleModalColor}
+                          open={openColor}
+                          dialogProp={{
+                            disableBackdropClick: true,
+                            scroll: "body",
+                            maxWidth: "md",
+                          }}
+                        >
+                          <Grid container>
+                            <Box>
+                              <Grid item xs={4}>
+                                <SketchPicker
+                                  color={getColor ? getColor.color : "#FFF"}
+                                  onChangeComplete={(c) =>
+                                    handleComplateColor(c, row)
+                                  }
+                                />
+                              </Grid>
+                            </Box>
+                            <Box>
+                              <Grid item xs={8}>
+                                <List dense={false}>
+                                  {getColor
+                                    ? getColor.colors.map((c) => (
+                                        <Button onClick={() => 1}>
+                                          <Brightness1Icon
+                                            style={{
+                                              color: c,
+                                              boxShadow:
+                                                "0px 8px 15px rgba(0, 0, 0, 0.4)",
+                                            }}
+                                          />
+                                        </Button>
+                                      ))
+                                    : []}
+                                </List>
+                              </Grid>
+                            </Box>
+                          </Grid>
+                        </CustomDialog>
+                      </div>
+                    );
 
-                      return data;
-                    })
-              }
-            />
-
-            <Button
-              variant="contained"
-              size="small"
-              className={classes.order}
-              disabled={orderValues.length === 0 ? true : false}
-              onClick={() => {
-                handleOrder();
-                handleClose();
-              }}
-              color="primary"
-            >
-              ORDER
-            </Button>
-          </div>
-        </Container>
+                    return data;
+                  })
+            }
+          />
+        </div>
       </CustomDialog>
     </div>
   );

@@ -5,7 +5,7 @@ import { addNewOrder } from "../../store/modules/newOrder";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
 import { useDispatch } from "react-redux";
 import PersonalData from "./personalInfo";
-import { memo, useMemo, useState } from "react";
+import { memo, useMemo, useState, useEffect } from "react";
 import Service from "./services";
 import Payment from "./payment";
 import * as Yup from "yup";
@@ -25,9 +25,9 @@ function Order() {
     setInfo(values);
   };
 
-  const [service, setService] = useState([]);
+  const [serviceOrder, setServiceOrder] = useState([]);
   const handleservice = (value) => {
-    setService((prev) => {
+    setServiceOrder((prev) => {
       return value;
     });
   };
@@ -43,28 +43,28 @@ function Order() {
   };
 
   useMemo(() => {
-    if (service.length === 0) {
+    if (serviceOrder.length === 0) {
       return handleChecking("Fadlan Order samee");
     }
 
-    if (service.length > 0) {
-      const total = service.reduce((accumulatar, currentValue) => {
-        return accumulatar + currentValue.amount;
+    if (serviceOrder.length > 0) {
+      const SumTotal = serviceOrder.reduce((accumulatar, currentValue) => {
+        return accumulatar + currentValue.total;
       }, 0);
-      console.log("total", total);
-      handleTotalAmount(total);
+      console.log("SumTotal", SumTotal);
+      handleTotalAmount(SumTotal);
       return handleChecking("");
     }
-  }, [service]);
+  }, [serviceOrder]);
 
   const onSubmit = async (values) => {
     const data = {
-      service: service,
+      serviceOrder: serviceOrder,
       ...values,
       totalAmount: totalAmount,
     };
 
-    if (service.length === 0) {
+    if (serviceOrder.length === 0) {
       return handleChecking("Fadlan Order samee");
     }
 
@@ -83,7 +83,7 @@ function Order() {
   return (
     <div>
       <PageHeader
-        title="Service"
+        title="ServiceOrder"
         subTitle="Services Order"
         Icon={<LocalMallIcon />}
       />
@@ -105,10 +105,10 @@ function Order() {
               <Service
                 label="Service"
                 handleservice={handleservice}
-                service={service}
+                serviceOrder={serviceOrder}
               />
               <Payment
-                personal={info}
+                info={info}
                 totalAmount={totalAmount}
                 label="Payment"
                 checking={checking}
@@ -125,4 +125,4 @@ function Order() {
   );
 }
 
-export default memo(Order);
+export default Order;

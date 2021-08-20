@@ -9,8 +9,8 @@ import {
   TextField,
 } from "@material-ui/core";
 
-function Payment({ personal, checking, totalAmount }) {
-  const { name } = personal;
+function Payment({ info, checking, totalAmount }) {
+  const { name } = info;
   const description = checking + " " + name;
   const TypePaid = [
     { label: "Cash", value: "Cash" },
