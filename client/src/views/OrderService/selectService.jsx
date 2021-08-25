@@ -1,22 +1,13 @@
+import Color from "./color";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllService, loadServices } from "../../store/modules/service";
 import FormControl from "../../components/controls/FormControl";
 import BaseTable from "../../components/controls/BaseTable";
 import Brightness1Icon from "@material-ui/icons/Brightness1";
-import {
-  TextField,
-  Checkbox,
-  makeStyles,
-  Button,
-  List,
-  Box,
-  Grid,
-  ListItemText,
-  ListItem,
-} from "@material-ui/core";
+import { TextField, Checkbox, makeStyles, Button } from "@material-ui/core";
 import CustomDialog from "../../components/CustomDialog";
-import { SketchPicker } from "react-color";
+// import { SketchPicker } from "react-color";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -73,24 +64,9 @@ export default function NewOrder(props) {
     setOpen(false);
   };
 
-  const [currenColorId, setCurrenColorId] = useState(0);
-  const [openColor, setOpenColor] = React.useState(false);
-  const handleModalColor = (id) => {
-    setOpenColor(!openColor);
-    setCurrenColorId((prev) => id);
-    console.log("color id", id);
-  };
-
   useEffect(async () => {
     await dispatch(loadServices());
   }, []);
-
-  const serviceItems = [
-    { value: "washing", label: "Washing" },
-    { value: "ironing", label: "Ironing" },
-    { value: "ExWashing", label: "Ex-Washing" },
-    { value: "ExIroning", label: "Ex-Ironing" },
-  ];
 
   const CreateCheckState = async () =>
     await ServicesData.map((s) => {
@@ -132,9 +108,40 @@ export default function NewOrder(props) {
   }, [ServicesData]);
 
   const [typeService, setTypeService] = useState("washing");
+  const [CurrentService, setCurrentService] = useState({
+    washing: true,
+    ironing: false,
+    ExWashing: false,
+    ExIroning: false,
+  });
+  const serviceItems = [
+    { value: "washing", label: "Washing", current: CurrentService.washing },
+    { value: "ironing", label: "Ironing", current: CurrentService.ironing },
+    {
+      value: "ExWashing",
+      label: "Ex-Washing",
+      current: CurrentService.ExWashing,
+    },
+    {
+      value: "ExIroning",
+      label: "Ex-Ironing",
+      current: CurrentService.ExIroning,
+    },
+  ];
   const onChangeTypeService = (e) => {
     //change service Type. radio Button onChange Here!.
     setTypeService(e.target.value);
+
+    setCurrentService({
+      washing: false,
+      ExWashing: false,
+      ironing: false,
+      ExIroning: false,
+    });
+    setCurrentService((prev) => {
+      return { ...prev, [e.target.value]: true };
+    });
+    // console.log("name", e.target.value);
 
     //change the value of amount in service.
     let services = QtyAmountState.filter((item) => item.amount > 0);
@@ -230,26 +237,28 @@ export default function NewOrder(props) {
 
     let orderderArray = [];
     if (ServicesData.length > 0) {
-      for (const i of ServicesData) {
-        for (const j of qtyAmountData) {
-          if (i._id === j.Cid) {
-            orderderArray.push({
-              itemName: i.item,
-              qty: j.qty,
-              _id: i._id,
-              total: j.qty * j.amount,
-              type: typeService,
-              amount: j.amount,
-            });
+      for (const s of ServicesData) {
+        for (const q of qtyAmountData) {
+          for (const c of ColorState) {
+            if (s._id === q.Cid && s._id === c._id) {
+              orderderArray.push({
+                itemName: s.item,
+                colors: c.colors,
+                qty: q.qty,
+                _id: s._id,
+                type: typeService,
+                amount: q.amount,
+                total: q.qty * q.amount,
+              });
+            }
           }
         }
       }
     }
 
-    console.log(orderderArray);
     handleservice(orderderArray);
     // return orderderArray;
-  }, [QtyAmountState, checkBoxes]);
+  }, [QtyAmountState, checkBoxes, ColorState]);
 
   return (
     <div>
@@ -322,58 +331,12 @@ export default function NewOrder(props) {
 
                     let getColor = getColorState(row._id);
                     data.color = (
-                      <div>
-                        <Button
-                          variant="contained"
-                          size="small"
-                          onClick={() => handleModalColor(row._id)}
-                          color="primary"
-                        >
-                          Color
-                        </Button>
-                        <CustomDialog
-                          title={<div>Choose Color</div>}
-                          onClose={handleModalColor}
-                          open={openColor}
-                          dialogProp={{
-                            disableBackdropClick: true,
-                            scroll: "body",
-                            maxWidth: "md",
-                          }}
-                        >
-                          <Grid container>
-                            <Box>
-                              <Grid item xs={4}>
-                                <SketchPicker
-                                  color={getColor ? getColor.color : "#FFF"}
-                                  onChangeComplete={(c) =>
-                                    handleComplateColor(c, row)
-                                  }
-                                />
-                              </Grid>
-                            </Box>
-                            <Box>
-                              <Grid item xs={8}>
-                                <List dense={false}>
-                                  {getColor
-                                    ? getColor.colors.map((c) => (
-                                        <Button onClick={() => 1}>
-                                          <Brightness1Icon
-                                            style={{
-                                              color: c,
-                                              boxShadow:
-                                                "0px 8px 15px rgba(0, 0, 0, 0.4)",
-                                            }}
-                                          />
-                                        </Button>
-                                      ))
-                                    : []}
-                                </List>
-                              </Grid>
-                            </Box>
-                          </Grid>
-                        </CustomDialog>
-                      </div>
+                      <Color
+                        setColorState={setColorState}
+                        ColorState={ColorState}
+                        row={row}
+                        value={getColor}
+                      />
                     );
 
                     return data;

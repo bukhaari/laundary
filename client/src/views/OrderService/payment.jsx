@@ -1,5 +1,6 @@
 import { FormikStep } from "../../components/common/Stepper";
-import FormikControl from "../../components/controls/FormControl";
+import { useEffect, useState } from "react";
+import FormControl from "../../components/controls/FormControl";
 import {
   Grid,
   Card,
@@ -7,54 +8,113 @@ import {
   makeStyles,
   CardHeader,
   TextField,
+  Typography,
 } from "@material-ui/core";
 
-function Payment({ info, checking, totalAmount }) {
-  const { name } = info;
-  const description = checking + " " + name;
-  const TypePaid = [
-    { label: "Cash", value: "Cash" },
-    { label: "M-PESA", value: "M-PESA" },
-  ];
-
+function Payment({ info, checking, payment, setPayment, setTypePaid }) {
   const useStyle = makeStyles({
     desClor: {
       color: checking === "" ? "black" : "red",
     },
   });
-
   const classes = useStyle();
+  const { name, balance: oldBalance } = info;
+
+  const handlePayment = (e) => {
+    setPayment((prev) => {
+      return { ...prev, [e.target.name]: parseInt(e.target.value) };
+    });
+  };
+  const { balance, totalAmount, paidAmount } = payment;
+
+  useEffect(() => {
+    if (paidAmount)
+      setPayment((prev) => {
+        return {
+          ...prev,
+          balance:
+            parseInt(oldBalance) + parseInt(totalAmount) - parseInt(paidAmount),
+        };
+      });
+
+    if (!paidAmount)
+      setPayment((prev) => {
+        return {
+          ...prev,
+          balance: parseInt(oldBalance) + parseInt(totalAmount),
+        };
+      });
+  }, [paidAmount]);
+
+  const [CurrentPaid, setCurrentPaid] = useState({
+    Cash: true,
+    MPESA: false,
+  });
+  const TypeItems = [
+    { value: "Cash", label: "Cash", current: CurrentPaid.Cash },
+    { value: "MPESA", label: "M-PESA", current: CurrentPaid.MPESA },
+  ];
+  const handleChangeType = (e) => {
+    setTypePaid(e.target.value);
+    setCurrentPaid({
+      Cash: false,
+      MPESA: false,
+    });
+    setCurrentPaid((prev) => {
+      return { ...prev, [e.target.value]: true };
+    });
+  };
 
   return (
     <FormikStep>
       <Card>
-        <CardHeader title={description} className={classes.desClor} />
         <CardContent>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={12}>
-              <FormikControl
-                control="field"
-                name="paidAmount"
-                type="number"
-                lable="Paid Amount"
-              />
+            <Grid item xs={7}>
+              <Typography className={classes.desClor}>
+                {checking ? checking : ` Name:${name}`}
+              </Typography>
+            </Grid>
+            <Grid item xs={5}>
+              <Typography>
+                {checking
+                  ? ""
+                  : `Preivious Balance:
+                ${oldBalance}
+                and new balance:
+                ${totalAmount}`}
+              </Typography>
             </Grid>
             <Grid item xs={12} sm={12}>
               <TextField
-                type="number"
                 fullWidth
-                disabled
-                label="balance"
                 size="small"
+                lable="Paid"
+                type="number"
                 variant="outlined"
-                value={totalAmount}
+                name="paidAmount"
+                value={paidAmount}
+                onChange={handlePayment}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                disabled
+                fullWidth
+                type="number"
+                size="small"
+                label="Preivious balance + new balance"
+                variant="outlined"
+                name="totalAmount"
+                value={balance}
+                onChange={handlePayment}
               />
             </Grid>
             <Grid item xs={12} sm={12}>
-              <FormikControl
-                control="radioFieldGroup"
-                name="typePaid"
-                items={TypePaid}
+              <FormControl
+                control="radio"
+                onChange={handleChangeType}
+                items={TypeItems}
               />
             </Grid>
           </Grid>

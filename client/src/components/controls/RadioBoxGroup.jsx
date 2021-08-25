@@ -19,7 +19,7 @@ export default function BaseRadioGroup(props) {
           <FormControlLabel
             key={index}
             value={item.value}
-            control={<Radio />}
+            control={<Radio checked={item.current} />}
             label={item.label}
           />
         ))}

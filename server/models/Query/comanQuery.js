@@ -145,15 +145,24 @@ function updateMany(dbName, collectionName, key, data, insert = false) {
   });
 }
 
-function findAll(db_Name, collectionName, key = {}, options = {}) {
+function findAll(
+  db_Name,
+  collectionName,
+  key = {},
+  options = {},
+  sortKey = {}
+) {
   return new Promise((resolve, reject) => {
     // console.log(db_Name, collectionName, key);
     DB_Collection(db_Name, collectionName)
       .then(find => {
-        find.find(key, options).toArray((err, doc) => {
-          if (!err) resolve(doc || []);
-          else reject(err);
-        });
+        find
+          .find(key, options)
+          .sort(sortKey)
+          .toArray((err, doc) => {
+            if (!err) resolve(doc || []);
+            else reject(err);
+          });
       })
       .catch(error => {
         reject(error);
@@ -442,13 +451,28 @@ const findOneAndUpdateData = async (
   return await datas.findOne(filterKey);
 };
 
-// const updateOneData = async (dbName, collectionName, data, filterKey) => {
-//   const datas = await DB_Collection(dbName, collectionName);
-//   return datas.updateOne(filterKey, { $set: data });
-// };
+const findOneData = async (dbName, collectionName, filterKey) => {
+  try {
+    const datas = await DB_Collection(dbName, collectionName);
+    return await datas.findOne(filterKey);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const insertOneData = async (dbName, collectionName, data) => {
+  try {
+    const datas = await DB_Collection(dbName, collectionName);
+    const newData = await datas.insertOne(data);
+    return newData.ops;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
   BulkWrite,
+  insertOneData,
   findJoined_WithKey,
   DeleteMany,
   Aggregate,
@@ -464,6 +488,6 @@ module.exports = {
   insertUsingTransaction,
   CreateCollections,
   CreateIndex,
-  findOneAndUpdateData
-  // updateOneData
+  findOneAndUpdateData,
+  findOneData
 };

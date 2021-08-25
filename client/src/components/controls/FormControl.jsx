@@ -9,7 +9,7 @@ import RadioBoxGroup from "./RadioBoxGroup";
 import BaseRadioBoxField from "./BaseRadioBoxField";
 import RadioBoxGroupField from "./RadioGroupField";
 
-function FormikControl({ control, ...rest }) {
+function FormControls({ control, ...rest }) {
   switch (control) {
     case "field":
       return <BaseField {...rest} />;
@@ -42,4 +42,4 @@ function FormikControl({ control, ...rest }) {
   }
 }
 
-export default FormikControl;
+export default FormControls;

@@ -4,5 +4,6 @@ export const EndPoints = {
   user: "/users",
   service: "/service",
   employees: "/employees",
-  newOrder: "/newOrder",
+  client: "/client",
+  order: "/orderList",
 };

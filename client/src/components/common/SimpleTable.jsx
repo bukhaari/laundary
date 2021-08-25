@@ -122,14 +122,14 @@ export default function BaseTable({
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+  // const handleChangePage = (event, newPage) => {
+  //   setPage(newPage);
+  // };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  // const handleChangeRowsPerPage = (event) => {
+  //   setRowsPerPage(parseInt(event.target.value, 10));
+  //   setPage(0);
+  // };
 
   return (
     <TableContainer component={Paper}>
@@ -172,7 +172,7 @@ export default function BaseTable({
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TablePagination
+            {/* <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
               colSpan={3}
               count={items.length}
@@ -185,7 +185,7 @@ export default function BaseTable({
               onChangePage={handleChangePage}
               onChangeRowsPerPage={handleChangeRowsPerPage}
               ActionsComponent={TablePaginationActions}
-            />
+            /> */}
           </TableRow>
         </TableFooter>
       </Table>

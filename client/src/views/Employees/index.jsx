@@ -1,11 +1,11 @@
 import React, { memo, useEffect } from "react";
-import { BaseCard, CardHeader } from "../../components/common/BaseCard";
-import AddButton from "../../views/Employees/employeeForm";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllEmployees, loadEmployees } from "../../store/modules/Employees";
-import DataTable from "material-datatable";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import AddButton from "../../views/Employees/employeeForm";
 import PageHeader from "./../../components/common/pageHeader";
+import { BaseCard, CardHeader } from "../../components/common/BaseCard";
+import { getAllEmployees, loadEmployees } from "../../store/modules/Employees";
+import BaseTable from "../../components/controls/BaseTable";
 
 import { makeStyles, Grid } from "@material-ui/core";
 
@@ -25,59 +25,13 @@ function Empolyee() {
     dispatch(loadEmployees());
   }, []);
 
-  const options = {
-    // filterType: "checkbox",
-    // filterType: 'multiselect',
-    filter: false,
-    selectableRows: false,
-    usePaperPlaceholder: true,
-    responsive: "scroll",
-    rowsPerPage: 10,
-    componentWillReceiveProps: true,
-    page: 0,
-    sortColumnIndex: 2,
-    sortColumnDirection: "desc",
-    sortFilterList: true,
-    print: true,
-    download: true,
-    viewColumns: true,
-    pagination: true,
-  };
+  let Header = [
+    { field: "name", headerName: "Name" },
+    { field: "phone", headerName: "Phone" },
+    { field: "address", headerName: "Address" },
+    { field: "action", headerName: "Action" },
+  ];
 
-  const TableData = {
-    columns: [
-      {
-        name: "Name",
-        field: "name",
-      },
-      {
-        name: "Phone",
-        field: "phone",
-      },
-      {
-        name: "Address",
-        field: "address",
-      },
-      {
-        name: "action",
-        field: "action",
-        options: {
-          filter: false,
-          sort: false,
-        },
-      },
-    ],
-    data: employees.map((s) => {
-      const employee = { ...s };
-      employee.action = (
-        <AddButton
-          titlePopUp="Employee Registration"
-          isNewOrUpdate={employee}
-        />
-      );
-      return employee;
-    }),
-  };
   return (
     <div>
       <PageHeader
@@ -95,11 +49,18 @@ function Empolyee() {
                   isNewOrUpdate="new"
                 />
               </CardHeader>
-              <DataTable
-                title={"Employees"}
-                data={TableData.data}
-                columns={TableData.columns}
-                options={options}
+              <BaseTable
+                header={Header}
+                items={employees.map((s) => {
+                  const employee = { ...s };
+                  employee.action = (
+                    <AddButton
+                      titlePopUp="Employee Registration"
+                      isNewOrUpdate={employee}
+                    />
+                  );
+                  return employee;
+                })}
               />
             </BaseCard>
           </Grid>

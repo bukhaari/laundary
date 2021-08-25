@@ -18,7 +18,6 @@ function FormikStepper({ children, ...props }) {
     <Formik
       {...props}
       onSubmit={async (values, helpers) => {
-        props.getInfo(values);
         if (isLastStep()) {
           await props.onSubmit(values, helpers);
           setComplated(true);

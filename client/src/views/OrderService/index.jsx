@@ -1,11 +1,11 @@
 import { FormikStepper } from "../../components/common/Stepper";
 import { CardContent, Card, makeStyles } from "@material-ui/core";
 import PageHeader from "../../components/common/pageHeader";
-import { addNewOrder } from "../../store/modules/newOrder";
+import { addNewOrder } from "../../store/modules/Order";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
 import { useDispatch } from "react-redux";
 import PersonalData from "./personalInfo";
-import { memo, useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import Service from "./services";
 import Payment from "./payment";
 import * as Yup from "yup";
@@ -20,10 +20,13 @@ function Order() {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const [info, setInfo] = useState({});
-  const getInfo = (values) => {
-    setInfo(values);
-  };
+  const [TypePaid, setTypePaid] = useState("Cash");
+
+  const [personalData, setPersonalData] = useState({
+    number: "",
+    name: "",
+    balance: 0,
+  });
 
   const [serviceOrder, setServiceOrder] = useState([]);
   const handleservice = (value) => {
@@ -37,47 +40,61 @@ function Order() {
     setChecking(values);
   };
 
-  const [totalAmount, setTotalAmount] = useState(0);
-  const handleTotalAmount = (values) => {
-    setTotalAmount(values);
+  const [payment, setPayment] = useState({
+    balance: 0,
+    paidAmount: 0,
+    totalAmount: 0,
+  });
+  const handleTotalAndBalance = (v) => {
+    setPayment((prev) => {
+      return { ...prev, balance: parseInt(v) + parseInt(personalData.balance) };
+    });
+    setPayment((prev) => {
+      return { ...prev, totalAmount: parseInt(v) };
+    });
   };
 
   useMemo(() => {
+    if (personalData.name === "" || personalData.number === "") {
+      return handleChecking("Fadlan Soo gali magaca qofka iyo numberkiisa");
+    }
+
     if (serviceOrder.length === 0) {
-      return handleChecking("Fadlan Order samee");
+      return handleChecking("Fadlan Order u samee ");
     }
 
     if (serviceOrder.length > 0) {
       const SumTotal = serviceOrder.reduce((accumulatar, currentValue) => {
         return accumulatar + currentValue.total;
       }, 0);
-      console.log("SumTotal", SumTotal);
-      handleTotalAmount(SumTotal);
+      handleTotalAndBalance(SumTotal);
       return handleChecking("");
     }
   }, [serviceOrder]);
 
   const onSubmit = async (values) => {
-    const data = {
+    const datas = {
       serviceOrder: serviceOrder,
-      ...values,
-      totalAmount: totalAmount,
+      typePaid: TypePaid,
+      // ...values,
+      ...personalData,
+      ...payment,
     };
 
-    if (serviceOrder.length === 0) {
-      return handleChecking("Fadlan Order samee");
+    if (personalData.name === "" || personalData.name === "") {
+      return handleChecking("Fadlan Soo gali magaca qofka iyo numberkiisa");
     }
 
-    // const result = await dispatch(addNewOrder(values));
-    console.log("data submit", data);
+    if (serviceOrder.length === 0) {
+      return handleChecking("Fadlan Order samee u samee");
+    }
+
+    const { data: result } = await dispatch(addNewOrder(datas));
     handleChecking("");
   };
 
   const initialValues = {
-    number: "",
-    name: "",
-    paidAmount: 0,
-    typePaid: "",
+    // typePaid: "",
   };
 
   return (
@@ -90,17 +107,11 @@ function Order() {
       <div className={classes.pageContent}>
         <Card>
           <CardContent>
-            <FormikStepper
-              initialValues={initialValues}
-              onSubmit={onSubmit}
-              getInfo={getInfo}
-            >
+            <FormikStepper initialValues={initialValues} onSubmit={onSubmit}>
               <PersonalData
                 label="Personal Info"
-                validationSchema={Yup.object({
-                  name: Yup.string().required("Required!"),
-                  number: Yup.string().required("Required!"),
-                })}
+                setPersonalData={setPersonalData}
+                personalData={personalData}
               />
               <Service
                 label="Service"
@@ -108,14 +119,15 @@ function Order() {
                 serviceOrder={serviceOrder}
               />
               <Payment
-                info={info}
-                totalAmount={totalAmount}
+                info={personalData}
+                payment={payment}
+                setPayment={setPayment}
                 label="Payment"
                 checking={checking}
-                validationSchema={Yup.object({
-                  typePaid: Yup.string().required("Required!"),
-                  paidAmount: Yup.number().required("Required!"),
-                })}
+                setTypePaid={setTypePaid}
+                // validationSchema={Yup.object({
+                //   typePaid: Yup.string().required("Required!"),
+                // })}
               />
             </FormikStepper>
           </CardContent>

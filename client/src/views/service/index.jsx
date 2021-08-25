@@ -1,12 +1,12 @@
 import React, { memo, useEffect } from "react";
-import { BaseCard, CardHeader } from "../../components/common/BaseCard";
-import AddButton from "../../views/service/ServiceForm";
-import { useSelector, useDispatch } from "react-redux";
-import { getAllService, loadServices } from "../../store/modules/service";
-import DataTable from "material-datatable";
-import LocalMallIcon from "@material-ui/icons/LocalMall";
-import PageHeader from "./../../components/common/pageHeader";
 import { makeStyles, Grid } from "@material-ui/core";
+import { useSelector, useDispatch } from "react-redux";
+import AddButton from "../../views/service/ServiceForm";
+import LocalMallIcon from "@material-ui/icons/LocalMall";
+import BaseTable from "../../components/controls/BaseTable";
+import PageHeader from "./../../components/common/pageHeader";
+import { getAllService, loadServices } from "../../store/modules/service";
+import { BaseCard, CardHeader } from "../../components/common/BaseCard";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -82,6 +82,17 @@ function Service() {
     },
   ];
 
+  let Header = [
+    { field: "item", headerName: "Item" },
+    { field: "washing", headerName: "Washing" },
+    { field: "ironing", headerName: "Ironing" },
+    { field: "ExWashing", headerName: "Expr Washing" },
+    { field: "ExIroning", headerName: "Expr Ironing" },
+    { field: "action", headerName: "Action" },
+    // { field: "date", headerName: "Date" },
+    // { field: "time", headerName: "Time" },
+  ];
+
   return (
     <div>
       <PageHeader
@@ -99,9 +110,9 @@ function Service() {
                   isNewOrUpdate="new"
                 />
               </CardHeader>
-              <DataTable
-                title={"Services"}
-                data={ServicesData.map((service) => ({
+              <BaseTable
+                header={Header}
+                items={ServicesData.map((service) => ({
                   ...service,
                   action: (
                     <AddButton
@@ -110,8 +121,6 @@ function Service() {
                     />
                   ),
                 }))}
-                columns={columns}
-                options={options}
               />
             </BaseCard>
           </Grid>

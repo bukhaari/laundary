@@ -27,6 +27,7 @@ import Client from "../views/Client";
 import Orders from "../views/OrderService";
 import Service from "../views/service";
 import Employees from "../views/Employees";
+import OrderList from "../views/OrderList";
 
 const drawerWidth = 240;
 
@@ -41,6 +42,11 @@ let initialRoutes = [
     path: "/newOrder",
     exact: true,
     page: Orders,
+  },
+  {
+    path: "/list",
+    exact: true,
+    page: OrderList,
   },
   {
     path: "/service",
@@ -70,6 +76,7 @@ let initialRoutes = [
     page: HomePage,
   },
 ];
+
 if (process.env.NODE_ENV === "development") {
   initialRoutes.unshift({
     path: "/newcomp",

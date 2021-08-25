@@ -32,6 +32,16 @@ const ClientLinks = [
         }
       },
       {
+        title: 'Order List',
+        to: '/list',
+        icon: 'fact_check',
+        meta: {
+          create: true,
+          edite: true,
+          delete: true
+        }
+      },
+      {
         title: 'Taken',
         to: '/taken',
         icon: 'done_all',
@@ -160,6 +170,10 @@ const AdminLinks = [
   {
     access: 'Admin',
     text: 'New'
+  },
+  {
+    access: 'Admin',
+    text: 'Order List'
   },
   {
     access: 'Admin',

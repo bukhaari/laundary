@@ -1,10 +1,11 @@
 import { FormikStep } from "../../components/common/Stepper";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import SearchIcon from "@material-ui/icons/Search";
 import BaseTable from "../../components/controls/BaseTable";
 import SelectService from "./selectService";
 import { makeStyles, IconButton, Grid, InputBase } from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import Brightness1Icon from "@material-ui/icons/Brightness1";
 
 const useStyle = makeStyles((theme) => ({
   button: {
@@ -27,6 +28,7 @@ function Service(props) {
     { field: "qty", headerName: "Qty" },
     { field: "amount", headerName: "amount" },
     { field: "total", headerName: "Total" },
+    { field: "color", headerName: "Color" },
     { field: "delete", headerName: "Delete" },
   ];
 
@@ -99,6 +101,16 @@ function Service(props) {
                     <DeleteForeverIcon />
                   </IconButton>
                 ),
+                color: s.colors.map((c) => (
+                  <Brightness1Icon
+                    style={{
+                      color: c,
+                      marginLeft: "3px",
+                      border: "0.3px solid black",
+                      borderRadius: "50px",
+                    }}
+                  />
+                )),
               }))}
           />
         </Grid>
