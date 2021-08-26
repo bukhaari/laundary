@@ -1,18 +1,24 @@
-import React, { memo, useEffect, useState } from "react";
-import { BaseCard, CardHeader } from "../../components/common/BaseCard";
-import AddButton from "../../views/Employees/employeeForm";
-import DataTable from "material-datatable";
-import GroupAddIcon from "@material-ui/icons/GroupAdd";
-import PageHeader from "./../../components/common/pageHeader";
-import BaseTable from "../../components/controls/BaseTable";
 import { useDispatch } from "react-redux";
+import SearchIcon from "@material-ui/icons/Search";
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import React, { memo, useEffect, useState } from "react";
+import BaseTable from "../../components/controls/BaseTable";
+import PageHeader from "./../../components/common/pageHeader";
+import { makeStyles, Grid, InputBase } from "@material-ui/core";
 import { getAllClient } from "./../../store/modules/Client/index";
-import { makeStyles, Grid } from "@material-ui/core";
+import { BaseCard, CardHeader } from "../../components/common/BaseCard";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     marginTop: theme.spacing(5),
     margin: theme.spacing(4),
+  },
+  searchInput: {
+    opacity: "0.6",
+    padding: "opx 8px",
+    fontSize: "1rem",
+    marginTop: theme.spacing(2),
+    marginLeft: theme.spacing(2),
   },
 }));
 
@@ -21,6 +27,10 @@ function Client() {
   const classes = useStyles();
   // const employees = useSelector(getAllEmployees);
   const [Clients, setClients] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   useEffect(() => {
     const handleClient = async () => {
@@ -33,60 +43,6 @@ function Client() {
     };
     handleClient();
   }, []);
-
-  const options = {
-    // filterType: "checkbox",
-    // filterType: 'multiselect',
-    filter: false,
-    selectableRows: false,
-    usePaperPlaceholder: true,
-    responsive: "scroll",
-    rowsPerPage: 10,
-    componentWillReceiveProps: true,
-    page: 0,
-    sortColumnIndex: 2,
-    sortColumnDirection: "desc",
-    sortFilterList: true,
-    print: true,
-    download: true,
-    viewColumns: true,
-    pagination: true,
-  };
-
-  // const TableData = {
-  //   columns: [
-  //     {
-  //       name: "Name",
-  //       field: "name",
-  //     },
-  //     {
-  //       name: "Phone",
-  //       field: "phone",
-  //     },
-  //     {
-  //       name: "Address",
-  //       field: "address",
-  //     },
-  //     {
-  //       name: "action",
-  //       field: "action",
-  //       options: {
-  //         filter: false,
-  //         sort: false,
-  //       },
-  //     },
-  //   ],
-  //   data: employees.map((s) => {
-  //     const employee = { ...s };
-  //     employee.action = (
-  //       <AddButton
-  //         titlePopUp="Employee Registration"
-  //         isNewOrUpdate={employee}
-  //       />
-  //     );
-  //     return employee;
-  //   }),
-  // };
 
   let Header = [
     { field: "name", headerName: "Name" },
@@ -103,15 +59,35 @@ function Client() {
         Icon={<GroupAddIcon />}
       />
       <div className={classes.pageContent}>
-        <Grid container>
-          <Grid item xs={12} sm={12}>
-            <BaseCard>
+        <BaseCard>
+          <Grid container spacing={2}>
+            <Grid item xs={6} sm={3}>
+              <CardHeader>
+                <InputBase
+                  placeholder="Searching"
+                  className={classes.searchInput}
+                  startAdornment={<SearchIcon />}
+                  onChange={handleSearch}
+                />
+              </CardHeader>
+            </Grid>
+            <Grid item xs={12}>
               <BaseTable
                 header={Header}
                 items={
                   Clients.length === 0
                     ? []
-                    : Clients.map((row) => {
+                    : Clients.filter((s) => {
+                        if (searchQuery === "") {
+                          return s;
+                        } else if (
+                          s.name
+                            .toLowerCase()
+                            .includes(searchQuery.toLowerCase())
+                        ) {
+                          return s;
+                        }
+                      }).map((row) => {
                         const data = { ...row };
                         data.time = new Date(data.Date).toLocaleTimeString();
                         data.date = new Date(data.Date).toDateString();
@@ -119,9 +95,9 @@ function Client() {
                       })
                 }
               />
-            </BaseCard>
+            </Grid>
           </Grid>
-        </Grid>
+        </BaseCard>
       </div>
     </div>
   );

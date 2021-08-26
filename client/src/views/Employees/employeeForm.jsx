@@ -19,7 +19,7 @@ import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme) => ({
   button: {
-    margin: theme.spacing(1.5),
+    marginTop: theme.spacing(2),
     marginRight: theme.spacing(4),
     float: "right",
   },
@@ -86,9 +86,10 @@ function EmployeeForm({ titlePopUp, isNewOrUpdate = {} }) {
         <IconButton
           className={classes.button}
           size={"small"}
+          style={{ fontSize: "15px" }}
           onClick={() => setPopUp(true)}
         >
-          <AddIcon style={{ fontSize: "35px" }} /> Add New
+          <AddIcon /> Add New
         </IconButton>
       )}
 

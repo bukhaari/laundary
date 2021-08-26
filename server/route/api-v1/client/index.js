@@ -39,6 +39,7 @@ router.get('/:number', async (req, res) => {
     // console.log('filterKey', filterKey);
 
     const Clientdata = await findOneData(AccessDB, collClient, filterKey);
+    if (!Clientdata) return res.send('not Found').statusCode(404);
     const [Orderdata] = await findAll(
       AccessDB,
       CollOrder,
@@ -47,13 +48,13 @@ router.get('/:number', async (req, res) => {
         clientId: Clientdata._id
       },
       {},
-      { Date: -1 }
+      { _id: -1 }
     );
 
     // console.log('getClient', Clientdata);
     // console.log('Orderdata', Orderdata);
     const data = {
-      balance: Orderdata.balance ? Orderdata.balance : 0,
+      balance: Orderdata ? Orderdata.balance : 0,
       ...Clientdata
     };
     // console.log('Data', data);

@@ -1,13 +1,11 @@
 import Color from "./color";
-import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllService, loadServices } from "../../store/modules/service";
-import FormControl from "../../components/controls/FormControl";
-import BaseTable from "../../components/controls/BaseTable";
-import Brightness1Icon from "@material-ui/icons/Brightness1";
+import CustomDialog from "../../../components/CustomDialog";
+import React, { useEffect, useMemo, useState } from "react";
+import BaseTable from "../../../components/controls/BaseTable";
+import FormControl from "../../../components/controls/FormControl";
 import { TextField, Checkbox, makeStyles, Button } from "@material-ui/core";
-import CustomDialog from "../../components/CustomDialog";
-// import { SketchPicker } from "react-color";
+import { getAllService, loadServices } from "../../../store/modules/service";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -31,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NewOrder(props) {
+export default function SelectServices(props) {
   const {
     handleservice,
     seCheck,

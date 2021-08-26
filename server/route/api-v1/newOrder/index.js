@@ -18,7 +18,7 @@ const CollOrder = 'OrdersList';
 const CollClient = 'Client';
 
 router.post('/', async (req, res) => {
-  console.log('req.body:', req.body);
+  // console.log('req.body:', req.body);
   try {
     const { AccessDB, branchID } = req.headers.user;
 
@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 
     const getClient = await findOneData(AccessDB, CollClient, filterKey);
 
-    console.log('getClient:', getClient);
+    // console.log('getClient:', getClient);
     let newClient = {};
     if (!getClient)
       [newClient] = await insertOneData(AccessDB, CollClient, {
@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
         branch: branchID
       });
 
-    console.log('newClient:', newClient);
+    // console.log('newClient:', newClient);
 
     const typeService = req.body.serviceOrder.find(s => s);
     const OrderService = {
@@ -56,14 +56,15 @@ router.post('/', async (req, res) => {
       balance: req.body.balance,
       Date: new Date().toString(),
       typePaid: req.body.typePaid,
-      itemsOrders: req.body.serviceOrder,
       paidAmount: req.body.paidAmount,
-      totalAmount: req.body.totalAmount,
+      oldBalance: req.body.oldBalance,
+      total: req.body.totalAmount,
+      itemsOrders: req.body.serviceOrder,
       clientId: !newClient._id ? getClient._id : newClient._id
     };
 
     const [result] = await insertOneData(AccessDB, CollOrder, OrderService);
-    console.log('OrderService', result);
+    // console.log('OrderService', result);
 
     res.send(result);
   } catch (ex) {
@@ -73,7 +74,7 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-  console.log('req.body', req.body);
+  // console.log('req.body', req.body);
   const { AccessDB, branchID } = req.headers.user;
   const OrderClient = {
     DB_Name: AccessDB,

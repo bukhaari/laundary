@@ -1,14 +1,14 @@
-import { FormikStepper } from "../../components/common/Stepper";
-import { CardContent, Card, makeStyles } from "@material-ui/core";
-import PageHeader from "../../components/common/pageHeader";
+import * as Yup from "yup";
+import Payment from "./payment";
+import { useMemo, useState } from "react";
+import PersonalData from "./personalInfo";
+import { useDispatch } from "react-redux";
 import { addNewOrder } from "../../store/modules/Order";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
-import { useDispatch } from "react-redux";
-import PersonalData from "./personalInfo";
-import { useMemo, useState } from "react";
-import Service from "./services";
-import Payment from "./payment";
-import * as Yup from "yup";
+import Service from "./ServiceTable";
+import PageHeader from "../../components/common/pageHeader";
+import { FormikStepper } from "../../components/common/Stepper";
+import { CardContent, Card, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -78,7 +78,10 @@ function Order() {
       typePaid: TypePaid,
       // ...values,
       ...personalData,
-      ...payment,
+      balance: payment.balance,
+      paidAmount: payment.paidAmount,
+      oldBalance: personalData.balance,
+      totalAmount: payment.totalAmount + personalData.balance,
     };
 
     if (personalData.name === "" || personalData.name === "") {

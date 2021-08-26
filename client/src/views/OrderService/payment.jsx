@@ -1,15 +1,8 @@
-import { FormikStep } from "../../components/common/Stepper";
 import { useEffect, useState } from "react";
+import { Grid, Card, CardContent } from "@material-ui/core";
+import { FormikStep } from "../../components/common/Stepper";
 import FormControl from "../../components/controls/FormControl";
-import {
-  Grid,
-  Card,
-  CardContent,
-  makeStyles,
-  CardHeader,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { makeStyles, TextField, Typography } from "@material-ui/core";
 
 function Payment({ info, checking, payment, setPayment, setTypePaid }) {
   const useStyle = makeStyles({
