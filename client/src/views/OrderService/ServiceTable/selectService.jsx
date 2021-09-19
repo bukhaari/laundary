@@ -198,23 +198,6 @@ export default function SelectServices(props) {
     setQtyAmountState([...services, upd]);
   };
 
-  const handleComplateColor = (color, row) => {
-    console.log("row", row);
-    // console.log("Id color", id);
-    let AllColorState = ColorState.filter((item) => item._id !== row._id);
-    let current = ColorState.find((item) => item._id === row._id);
-    // console.log("AllColorState", AllColorState);
-    console.log("current", current);
-
-    const upd = {
-      ...current,
-      color: color.hex,
-      colors: [...current.colors, color.hex],
-    };
-    setColorState((prevColor) => [...AllColorState, upd]);
-    console.log("ColorState", ColorState);
-  };
-
   const getcheckState = (id) => {
     let c = checkBoxes.find((k) => k.Cid == id);
     return c;
@@ -247,6 +230,7 @@ export default function SelectServices(props) {
                 type: typeService,
                 amount: q.amount,
                 total: q.qty * q.amount,
+                date: new Date().toString(),
               });
             }
           }

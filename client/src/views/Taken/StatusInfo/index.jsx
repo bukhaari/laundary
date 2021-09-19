@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import Ready from "./ready";
+import Taken from "./taken";
 import Missed from "./missed";
 import Payment from "./payment";
 import React, { useMemo, useState, memo } from "react";
@@ -41,7 +41,7 @@ function StatusInfo(props) {
 
   const AutoComplateData = [
     { title: "Missed", id: 1 },
-    { title: "Ready", id: 2 },
+    { title: "Taken", id: 2 },
     { title: "Payment", id: 3 },
   ];
 
@@ -57,7 +57,7 @@ function StatusInfo(props) {
   const handleModalStatus = () => {
     setModelStatus(!modelStatus);
 
-    setCheckData("Ready");
+    setCheckData("Taken");
   };
 
   let RenderData = useMemo(() => {
@@ -69,9 +69,9 @@ function StatusInfo(props) {
           orderId={orderId}
         />
       );
-    if (CheckData === "Ready")
+    if (CheckData === "Taken")
       return (
-        <Ready
+        <Taken
           OrderList={OrderList}
           setOrderList={setOrderList}
           orderId={orderId}
@@ -133,7 +133,7 @@ function StatusInfo(props) {
                 <Autocomplete
                   id="combo-box-demo"
                   options={AutoComplateData}
-                  defaultValue={{ title: "Ready", id: 2 }}
+                  defaultValue={{ title: "Taken", id: 2 }}
                   getOptionLabel={(option) => option.title}
                   onChange={handleChangeComplate}
                   renderInput={(params) => (

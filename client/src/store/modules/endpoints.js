@@ -5,5 +5,6 @@ export const EndPoints = {
   service: "/service",
   employees: "/employees",
   client: "/client",
-  order: "/orderList",
+  order: "/order",
+  payment: "/payment",
 };

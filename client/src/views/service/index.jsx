@@ -11,10 +11,9 @@ import { BaseCard } from "../../components/common/BaseCard";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
-    marginTop: theme.spacing(5),
+    marginTop: theme.spacing(2),
     marginLeft: theme.spacing(2.5),
     marginRight: theme.spacing(2.5),
-    marginBottom: theme.spacing(2.5),
   },
   searchInput: {
     opacity: "0.6",

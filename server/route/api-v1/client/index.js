@@ -10,8 +10,9 @@ const router = express.Router();
 router.use(verifyToken);
 
 //Collection Names
-const CollOrder = 'OrdersList';
+// const CollOrder = 'OrdersList';
 const collClient = 'Client';
+const CollPayment = 'Payment';
 
 router.get('/', (req, res) => {
   const { AccessDB, branchID } = req.headers.user;
@@ -39,10 +40,10 @@ router.get('/:number', async (req, res) => {
     // console.log('filterKey', filterKey);
 
     const Clientdata = await findOneData(AccessDB, collClient, filterKey);
-    if (!Clientdata) return res.send('not Found').statusCode(404);
-    const [Orderdata] = await findAll(
+    if (Clientdata === null) return res.send('not Found');
+    const [DbPayment] = await findAll(
       AccessDB,
-      CollOrder,
+      CollPayment,
       {
         branch: branchID,
         clientId: Clientdata._id
@@ -54,7 +55,7 @@ router.get('/:number', async (req, res) => {
     // console.log('getClient', Clientdata);
     // console.log('Orderdata', Orderdata);
     const data = {
-      balance: Orderdata ? Orderdata.balance : 0,
+      balance: DbPayment ? DbPayment.balance : 0,
       ...Clientdata
     };
     // console.log('Data', data);

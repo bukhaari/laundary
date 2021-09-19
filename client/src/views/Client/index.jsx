@@ -3,15 +3,16 @@ import SearchIcon from "@material-ui/icons/Search";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import React, { memo, useEffect, useState } from "react";
 import BaseTable from "../../components/controls/BaseTable";
+import { BaseCard } from "../../components/common/BaseCard";
 import PageHeader from "./../../components/common/pageHeader";
 import { makeStyles, Grid, InputBase } from "@material-ui/core";
 import { getAllClient } from "./../../store/modules/Client/index";
-import { BaseCard, CardHeader } from "../../components/common/BaseCard";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
-    marginTop: theme.spacing(5),
-    margin: theme.spacing(4),
+    marginTop: theme.spacing(2),
+    marginLeft: theme.spacing(2.5),
+    marginRight: theme.spacing(2.5),
   },
   searchInput: {
     opacity: "0.6",
@@ -25,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
 function Client() {
   const dispatch = useDispatch();
   const classes = useStyles();
-  // const employees = useSelector(getAllEmployees);
   const [Clients, setClients] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const handleSearch = (e) => {
@@ -61,15 +61,13 @@ function Client() {
       <div className={classes.pageContent}>
         <BaseCard>
           <Grid container spacing={2}>
-            <Grid item xs={6} sm={3}>
-              <CardHeader>
-                <InputBase
-                  placeholder="Searching"
-                  className={classes.searchInput}
-                  startAdornment={<SearchIcon />}
-                  onChange={handleSearch}
-                />
-              </CardHeader>
+            <Grid item xs={6}>
+              <InputBase
+                placeholder="Searching"
+                className={classes.searchInput}
+                startAdornment={<SearchIcon />}
+                onChange={handleSearch}
+              />
             </Grid>
             <Grid item xs={12}>
               <BaseTable

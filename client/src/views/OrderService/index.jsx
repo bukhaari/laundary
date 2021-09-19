@@ -9,6 +9,7 @@ import Service from "./ServiceTable";
 import PageHeader from "../../components/common/pageHeader";
 import { FormikStepper } from "../../components/common/Stepper";
 import { CardContent, Card, makeStyles } from "@material-ui/core";
+import Notification from "../../components/common/Notification";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -19,6 +20,12 @@ const useStyles = makeStyles((theme) => ({
 function Order() {
   const classes = useStyles();
   const dispatch = useDispatch();
+
+  const [notify, setNotify] = useState({
+    isOpen: false,
+    message: "",
+    type: "",
+  });
 
   const [TypePaid, setTypePaid] = useState("Cash");
 
@@ -82,6 +89,7 @@ function Order() {
       paidAmount: payment.paidAmount,
       oldBalance: personalData.balance,
       totalAmount: payment.totalAmount + personalData.balance,
+      orderAmount: payment.totalAmount,
     };
 
     if (personalData.name === "" || personalData.name === "") {
@@ -94,6 +102,21 @@ function Order() {
 
     const { data: result } = await dispatch(addNewOrder(datas));
     handleChecking("");
+    setNotify({
+      isOpen: true,
+      message: `${personalData.name} Successfully to payment`,
+      type: "success",
+    });
+    setPersonalData({
+      number: "",
+      name: "",
+      balance: 0,
+    });
+    setPayment({
+      balance: 0,
+      paidAmount: 0,
+      totalAmount: 0,
+    });
   };
 
   const initialValues = {
@@ -136,6 +159,7 @@ function Order() {
           </CardContent>
         </Card>
       </div>
+      <Notification notify={notify} setNotify={setNotify} />
     </div>
   );
 }

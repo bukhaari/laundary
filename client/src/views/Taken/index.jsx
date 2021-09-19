@@ -59,8 +59,8 @@ function OrderList() {
   return (
     <div>
       <PageHeader
-        title="Order List"
-        subTitle="OrderList"
+        title="Taken"
+        subTitle="Taken Information"
         Icon={<LocalMallIcon />}
       />
       <div className={classes.pageContent}>
@@ -84,7 +84,7 @@ function OrderList() {
                         if (searchQuery === "") {
                           return s.status === "Missed" ||
                             s.status === "Taken" ||
-                            s.status === "Ready"
+                            s.status === "Queue"
                             ? ""
                             : s;
                         } else if (
@@ -92,11 +92,7 @@ function OrderList() {
                             .toLowerCase()
                             .includes(searchQuery.toLowerCase())
                         ) {
-                          return s.status === "Missed" ||
-                            s.status === "Taken" ||
-                            s.status === "Ready"
-                            ? ""
-                            : s;
+                          return s.status === "Missed" ? "" : s;
                         }
                       }).map((row) => {
                         const data = { ...row };

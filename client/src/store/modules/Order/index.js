@@ -38,7 +38,7 @@ export const getOrderList = createSelector(
 export const loadOrderList = () => {
   return apiBegan({
     config: {
-      url: EndPoints.order,
+      url: EndPoints.order + "/list",
       method: "get",
     },
     // customSuccess: slice.actions.orderListReceived.type,
@@ -52,17 +52,47 @@ export const addNewOrder = (data) => {
       data,
       method: "post",
     },
-    customSuccess: slice.actions.orderListAdded.type,
+    // customSuccess: slice.actions.orderListAdded.type,
   });
 };
 
-export const updateOrderList = (data) => {
+// export const updateOrderList = (data) => {
+//   return apiBegan({
+//     config: {
+//       url: EndPoints.order,
+//       data,
+//       method: "put",
+//     },
+//     customSuccess: slice.actions.orderListUpdated.type,
+//   });
+// };
+
+export const updateReady = (data) => {
   return apiBegan({
     config: {
-      url: EndPoints.order,
+      url: EndPoints.order + "/ready",
       data,
       method: "put",
     },
-    customSuccess: slice.actions.orderListUpdated.type,
+  });
+};
+
+export const updateTaken = (data) => {
+  return apiBegan({
+    config: {
+      url: EndPoints.order + "/taken",
+      data,
+      method: "put",
+    },
+  });
+};
+
+export const updateMissed = (data) => {
+  return apiBegan({
+    config: {
+      url: EndPoints.order + "/missed",
+      data,
+      method: "put",
+    },
   });
 };

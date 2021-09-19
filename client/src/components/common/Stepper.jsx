@@ -21,6 +21,8 @@ function FormikStepper({ children, ...props }) {
         if (isLastStep()) {
           await props.onSubmit(values, helpers);
           setComplated(true);
+          helpers.resetForm();
+          setStep(0);
         } else {
           setStep((s) => s + 1);
         }

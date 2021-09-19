@@ -28,6 +28,7 @@ import Orders from "../views/OrderService";
 import Service from "../views/service";
 import Employees from "../views/Employees";
 import OrderList from "../views/OrderList";
+import Taken from "../views/Taken";
 
 const drawerWidth = 240;
 
@@ -47,6 +48,11 @@ let initialRoutes = [
     path: "/list",
     exact: true,
     page: OrderList,
+  },
+  {
+    path: "/taken",
+    exact: true,
+    page: Taken,
   },
   {
     path: "/service",

@@ -11,7 +11,7 @@ import { getAllEmployees, loadEmployees } from "../../store/modules/Employees";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
-    marginTop: theme.spacing(5),
+    marginTop: theme.spacing(2),
     margin: theme.spacing(4),
   },
   searchInput: {

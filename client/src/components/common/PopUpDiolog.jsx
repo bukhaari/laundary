@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "15px",
     fontWeight: "1000",
     paddingBottom: theme.spacing(1),
+    float: "right",
     // marginLeft:theme.spacing(5)
   },
 }));
@@ -38,7 +39,7 @@ function Popup(porps) {
       maxWidth="md"
       classes={{ paper: classes.dialogWrapper }}
     >
-      <DialogTitle>
+      <DialogTitle style={{ height: "55px" }}>
         <Grid container>
           <Grid item xs={10} sm={10}>
             <Typography className={classes.textTitele}>{title}</Typography>
